@@ -41,28 +41,29 @@ const Menu = () => {
             <div className="collapse" id="admin"></div>
           </li>
         )}
-        {
-          <li className="nav-item relative">
-            <a
-              className="nav-link"
-              data-toggle="collapse"
-              href="#auth"
-              aria-expanded="false"
-              aria-controls="auth"
-            >
-              <i className="icon-head menu-icon" />
-              <Link className="nav-link_active" to="/admin/list-user/">
-                <span
-                  style={{ fontSize: "16px", marginTop: "4px" }}
-                  className="menu-title"
-                >
-                  Quản lý người dùng
-                </span>
-              </Link>
-              {/* <i className="menu-arrow" /> */}
-            </a>
-            <div className="collapse" id="auth">
-              {/* <ul className="nav flex-column sub-menu">
+        {user && user.roleCode === "ADMIN" && (
+          <>
+            <li className="nav-item relative">
+              <a
+                className="nav-link"
+                data-toggle="collapse"
+                href="#auth"
+                aria-expanded="false"
+                aria-controls="auth"
+              >
+                <i className="icon-head menu-icon" />
+                <Link className="nav-link_active" to="/admin/list-user/">
+                  <span
+                    style={{ fontSize: "16px", marginTop: "4px" }}
+                    className="menu-title"
+                  >
+                    Quản lý người dùng
+                  </span>
+                </Link>
+                {/* <i className="menu-arrow" /> */}
+              </a>
+              <div className="collapse" id="auth">
+                {/* <ul className="nav flex-column sub-menu">
                         <li className="nav-item relative">
                           {" "}
                           <Link className="nav-link" to="/admin/list-user/">
@@ -78,10 +79,43 @@ const Menu = () => {
                           </Link>
                         </li>
                       </ul> */}
-            </div>
-          </li>
-          
-        }
+              </div>
+            </li>
+            <li className="nav-item relative">
+              <a
+                className="nav-link"
+                data-toggle="collapse"
+                href="#company"
+                aria-expanded="false"
+                aria-controls="company"
+              >
+                <i class="fa-solid fa-clipboard menu-icon"></i>
+                <Link
+                  className="nav-link_active"
+                  to="/admin/list-company-admin/"
+                >
+                  <span
+                    style={{ fontSize: "16px", marginLeft: "7px" }}
+                    className="menu-title"
+                  >
+                    Quản lý các công ty
+                  </span>
+                </Link>
+                {/* <i className="menu-arrow" /> */}
+              </a>
+              <div className="collapse" id="company">
+                {/* <ul className="nav flex-column sub-menu">
+              <li className="nav-item relative">
+                {" "}
+                <Link className="nav-link" to="/admin/list-company-admin/">
+                  Danh sách các công ty
+                </Link>
+              </li>
+            </ul> */}
+              </div>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );
