@@ -3,67 +3,73 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const Menu = () => {
-  const [user, setUser] = useState({});
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    setUser(userData);
-  }, []);
+    const [user, setUser] = useState({});
+    useEffect(() => {
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        setUser(userData);
+    }, []);
 
-  return (
-    <nav
-      style={{ backgroundColor: "#e2ebf8", width: "278px" }}
-      className="sidebar sidebar-offcanvas"
-      id="sidebar"
-    >
-      <ul className="nav">
-        {user && user.roleCode === "ADMIN" && (
-          <li className="nav-item relative">
-            <a
-              className="nav-link"
-              data-toggle="collapse"
-              href="#admin"
-              aria-expanded="false"
-              aria-controls="auth"
-            >
-              <Link className="nav-link_active" to="/admin/">
-                <i className="icon-grid menu-icon" />
-                <span
-                  style={{
-                    fontSize: "16px",
-                    marginTop: "5px",
-                  }}
-                  className="menu-title"
-                >
-                  Trang chủ
-                </span>
-              </Link>
-            </a>
-            <div className="collapse" id="admin"></div>
-          </li>
-        )}
-        {user && user.roleCode === "ADMIN" && (
-          <>
-            <li className="nav-item relative">
-              <a
-                className="nav-link"
-                data-toggle="collapse"
-                href="#auth"
-                aria-expanded="false"
-                aria-controls="auth"
-              >
-                <i className="icon-head menu-icon" />
-                <Link className="nav-link_active" to="/admin/list-user/">
-                  <span
-                    style={{ fontSize: "16px", marginTop: "4px" }}
-                    className="menu-title"
-                  >
-                    Quản lý người dùng
-                  </span>
-                </Link>
-                {/* <i className="menu-arrow" /> */}
-              </a>
-              <div className="collapse" id="auth">
-                {/* <ul className="nav flex-column sub-menu">
+    return (
+        <nav
+            style={{ backgroundColor: "#e2ebf8", width: "278px" }}
+            className="sidebar sidebar-offcanvas"
+            id="sidebar"
+        >
+            <ul className="nav">
+                {user && user.roleCode === "ADMIN" && (
+                    <li className="nav-item relative">
+                        <a
+                            className="nav-link"
+                            data-toggle="collapse"
+                            href="#admin"
+                            aria-expanded="false"
+                            aria-controls="auth"
+                        >
+                            <Link className="nav-link_active" to="/admin/">
+                                <i className="icon-grid menu-icon" />
+                                <span
+                                    style={{
+                                        fontSize: "16px",
+                                        marginTop: "5px",
+                                    }}
+                                    className="menu-title"
+                                >
+                                    Trang chủ
+                                </span>
+                            </Link>
+                        </a>
+                        <div className="collapse" id="admin"></div>
+                    </li>
+                )}
+                {user && user.roleCode === "ADMIN" && (
+                    <>
+                        <li className="nav-item relative">
+                            <a
+                                className="nav-link"
+                                data-toggle="collapse"
+                                href="#auth"
+                                aria-expanded="false"
+                                aria-controls="auth"
+                            >
+                                <i className="icon-head menu-icon" />
+                                <Link
+                                    className="nav-link_active"
+                                    to="/admin/list-user/"
+                                >
+                                    <span
+                                        style={{
+                                            fontSize: "16px",
+                                            marginTop: "4px",
+                                        }}
+                                        className="menu-title"
+                                    >
+                                        Quản lý người dùng
+                                    </span>
+                                </Link>
+                                {/* <i className="menu-arrow" /> */}
+                            </a>
+                            <div className="collapse" id="auth">
+                                {/* <ul className="nav flex-column sub-menu">
                         <li className="nav-item relative">
                           {" "}
                           <Link className="nav-link" to="/admin/list-user/">
@@ -79,32 +85,35 @@ const Menu = () => {
                           </Link>
                         </li>
                       </ul> */}
-              </div>
-            </li>
-            <li className="nav-item relative">
-              <a
-                className="nav-link"
-                data-toggle="collapse"
-                href="#company"
-                aria-expanded="false"
-                aria-controls="company"
-              >
-                <i class="fa-solid fa-clipboard menu-icon"></i>
-                <Link
-                  className="nav-link_active"
-                  to="/admin/list-company-admin/"
-                >
-                  <span
-                    style={{ fontSize: "16px", marginLeft: "7px" }}
-                    className="menu-title"
-                  >
-                    Quản lý các công ty
-                  </span>
-                </Link>
-                {/* <i className="menu-arrow" /> */}
-              </a>
-              <div className="collapse" id="company">
-                {/* <ul className="nav flex-column sub-menu">
+                            </div>
+                        </li>
+                        <li className="nav-item relative">
+                            <a
+                                className="nav-link"
+                                data-toggle="collapse"
+                                href="#company"
+                                aria-expanded="false"
+                                aria-controls="company"
+                            >
+                                <i class="fa-solid fa-clipboard menu-icon"></i>
+                                <Link
+                                    className="nav-link_active"
+                                    to="/admin/list-company-admin/"
+                                >
+                                    <span
+                                        style={{
+                                            fontSize: "16px",
+                                            marginLeft: "7px",
+                                        }}
+                                        className="menu-title"
+                                    >
+                                        Quản lý các công ty
+                                    </span>
+                                </Link>
+                                {/* <i className="menu-arrow" /> */}
+                            </a>
+                            <div className="collapse" id="company">
+                                {/* <ul className="nav flex-column sub-menu">
               <li className="nav-item relative">
                 {" "}
                 <Link className="nav-link" to="/admin/list-company-admin/">
@@ -112,13 +121,56 @@ const Menu = () => {
                 </Link>
               </li>
             </ul> */}
-              </div>
-            </li>
-          </>
-        )}
-      </ul>
-    </nav>
-  );
+                            </div>
+                        </li>
+                        <li className="nav-item relative">
+                            <a
+                                className="nav-link"
+                                data-toggle="collapse"
+                                href="#jobtype"
+                                aria-expanded="false"
+                                aria-controls="jobtype"
+                            >
+                                <i className="far fa-building menu-icon"></i>
+                                <Link
+                                    className="nav-link_active"
+                                    to="/admin/list-job-type/"
+                                >
+                                    <span
+                                        style={{
+                                            fontSize: "16px",
+                                            marginLeft: "4px",
+                                        }}
+                                        className="menu-title"
+                                    >
+                                        Quản lý loại công việc
+                                    </span>
+                                </Link>
+
+                                {/* <i className="menu-arrow" /> */}
+                            </a>
+                            <div className="collapse" id="jobtype">
+                                {/* <ul className="nav flex-column sub-menu">
+                  <li className="nav-item relative">
+                    {" "}
+                    <Link className="nav-link" to="/admin/list-job-type/">
+                      Danh sách loại công việc
+                    </Link>
+                  </li>
+                  <li className="nav-item relative">
+                    {" "}
+                    <Link className="nav-link" to="/admin/add-job-type/">
+                      Thêm loại công việc
+                    </Link>
+                  </li>
+                </ul> */}
+                            </div>
+                        </li>
+                    </>
+                )}
+            </ul>
+        </nav>
+    );
 };
 
 export default Menu;
