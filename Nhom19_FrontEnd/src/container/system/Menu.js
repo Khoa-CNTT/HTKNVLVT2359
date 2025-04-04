@@ -208,6 +208,46 @@ const Menu = () => {
                 </ul> */}
                             </div>
                         </li>
+                        {/* Quản Lý Khoản Lương */}
+                        <li className="nav-item relative">
+                            <a
+                                className="nav-link"
+                                data-toggle="collapse"
+                                href="#salarytype"
+                                aria-expanded="false"
+                                aria-controls="salarytype"
+                            >
+                                <i className="fas fa-money-check-alt menu-icon"></i>
+                                <Link
+                                    className="nav-link_active"
+                                    to="/admin/list-salary-type/"
+                                >
+                                    <span
+                                        style={{ fontSize: "16px" }}
+                                        className="menu-title"
+                                    >
+                                        Quản lý khoảng lương
+                                    </span>
+                                </Link>
+                                {/* <i className="menu-arrow" /> */}
+                            </a>
+                            <div className="collapse" id="salarytype">
+                                {/* <ul className="nav flex-column sub-menu">
+                  <li className="nav-item relative">
+                    {" "}
+                    <Link className="nav-link" to="/admin/list-salary-type/">
+                      Danh sách khoảng lương
+                    </Link>
+                  </li>
+                  <li className="nav-item relative">
+                    {" "}
+                    <Link className="nav-link" to="/admin/add-salary-type/">
+                      Thêm khoảng lương
+                    </Link>
+                  </li>
+                </ul> */}
+                            </div>
+                        </li>
                     </>
                 )}
             </ul>
