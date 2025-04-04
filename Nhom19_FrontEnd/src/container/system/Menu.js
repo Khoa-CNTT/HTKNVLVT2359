@@ -248,6 +248,49 @@ const Menu = () => {
                 </ul> */}
                             </div>
                         </li>
+                        {/* Quản Lý Năm Kinh Nghiệm Làm Việc */}
+                        <li className="nav-item relative">
+                            <a
+                                className="nav-link"
+                                data-toggle="collapse"
+                                href="#exptype"
+                                aria-expanded="false"
+                                aria-controls="exptype"
+                            >
+                                <i className="far fa-clock menu-icon"></i>
+                                <Link
+                                    className="nav-link_active"
+                                    to="/admin/list-exp-type/"
+                                >
+                                    <span
+                                        style={{
+                                            fontSize: "16px",
+                                            marginLeft: "2px",
+                                        }}
+                                        className="menu-title"
+                                    >
+                                        Quản lý năm kinh nghiệm
+                                    </span>
+                                </Link>
+                                {/* <i className="menu-arrow" /> */}
+                            </a>
+                            <div className="collapse" id="exptype">
+                                {/* <ul className="nav flex-column sub-menu">
+                  <li className="nav-item relative">
+                    {" "}
+                    <Link className="nav-link" to="/admin/list-exp-type/">
+                      Danh sách kinh nghiệm
+                    </Link>
+                  </li>
+                  <li className="nav-item relative">
+                    {" "}
+                    <Link className="nav-link" to="/admin/add-exp-type/">
+                      Thêm kinh nghiệm
+                    </Link>
+                  </li>
+                </ul> */}
+                            </div>
+                        </li>
                     </>
                 )}
             </ul>
