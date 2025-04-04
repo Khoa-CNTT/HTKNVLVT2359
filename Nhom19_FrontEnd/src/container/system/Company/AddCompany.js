@@ -304,6 +304,13 @@ const AddCompany = () => {
                                         {inputValues.isActionADD === true ? 'Tạo Mới Công Ty' : 'Cập Nhật'}
                                     </button>
                                 }
+                                {
+                                    user.roleCode !== "COMPANY" &&
+                                    <button style={{backgroundColor : 'rgb(250 166 26)' , border : '1px solid rgb(250 166 26)'}} onClick={() => handleSaveCompany()} type="button" className="btn1 btn1-primary1 btn1-icon-text">
+                                        <i class="ti-file btn1-icon-prepend"></i>
+                                        {inputValues.isActionADD === true ? 'Tạo Mới Công Ty' : 'Cập Nhật'}
+                                    </button>
+                                }
                             </form>
                         </div>
                     </div>
