@@ -208,31 +208,90 @@ const Menu = () => {
                 </ul> */}
                             </div>
                         </li>
+
+                        {/* Quản Lý Khoản Lương */}
                         <li className="nav-item relative">
-              <a
-                className="nav-link"
-                data-toggle="collapse"
-                href="#company"
-                aria-expanded="false"
-                aria-controls="company"
-              >
-                <i class="fa-solid fa-clipboard menu-icon"></i>
-                <Link className="nav-link_active" to="/admin/list-company-admin/">
-                  <span style={{fontSize : '16px' , marginLeft : '7px'}} className="menu-title">Quản lý các công ty</span>
-                </Link>
-                {/* <i className="menu-arrow" /> */}
-              </a>
-              <div className="collapse" id="company">
-                {/* <ul className="nav flex-column sub-menu">
+                            <a
+                                className="nav-link"
+                                data-toggle="collapse"
+                                href="#salarytype"
+                                aria-expanded="false"
+                                aria-controls="salarytype"
+                            >
+                                <i className="fas fa-money-check-alt menu-icon"></i>
+                                <Link
+                                    className="nav-link_active"
+                                    to="/admin/list-salary-type/"
+                                >
+                                    <span
+                                        style={{ fontSize: "16px" }}
+                                        className="menu-title"
+                                    >
+                                        Quản lý khoảng lương
+                                    </span>
+                                </Link>
+                                {/* <i className="menu-arrow" /> */}
+                            </a>
+                            <div className="collapse" id="salarytype">
+                                {/* <ul className="nav flex-column sub-menu">
                   <li className="nav-item relative">
                     {" "}
-                    <Link className="nav-link" to="/admin/list-company-admin/">
-                      Danh sách các công ty
+                    <Link className="nav-link" to="/admin/list-salary-type/">
+                      Danh sách khoảng lương
+                    </Link>
+                  </li>
+                  <li className="nav-item relative">
+                    {" "}
+                    <Link className="nav-link" to="/admin/add-salary-type/">
+                      Thêm khoảng lương
                     </Link>
                   </li>
                 </ul> */}
-              </div>
-            </li>
+                            </div>
+                        </li>
+                        {/* Quản Lý Năm Kinh Nghiệm Làm Việc */}
+                        <li className="nav-item relative">
+                            <a
+                                className="nav-link"
+                                data-toggle="collapse"
+                                href="#exptype"
+                                aria-expanded="false"
+                                aria-controls="exptype"
+                            >
+                                <i className="far fa-clock menu-icon"></i>
+                                <Link
+                                    className="nav-link_active"
+                                    to="/admin/list-exp-type/"
+                                >
+                                    <span
+                                        style={{
+                                            fontSize: "16px",
+                                            marginLeft: "2px",
+                                        }}
+                                        className="menu-title"
+                                    >
+                                        Quản lý năm kinh nghiệm
+                                    </span>
+                                </Link>
+                                {/* <i className="menu-arrow" /> */}
+                            </a>
+                            <div className="collapse" id="exptype">
+                                {/* <ul className="nav flex-column sub-menu">
+                  <li className="nav-item relative">
+                    {" "}
+                    <Link className="nav-link" to="/admin/list-exp-type/">
+                      Danh sách kinh nghiệm
+                    </Link>
+                  </li>
+                  <li className="nav-item relative">
+                    {" "}
+                    <Link className="nav-link" to="/admin/add-exp-type/">
+                      Thêm kinh nghiệm
+                    </Link>
+                  </li>
+                </ul> */}
+                            </div>
+                        </li>
                     </>
                 )}
             </ul>
