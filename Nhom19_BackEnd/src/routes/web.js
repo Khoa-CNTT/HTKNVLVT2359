@@ -18,6 +18,9 @@ let initWebRoutes = (app) => {
 
     //==================API COMPANY=========================//
     router.post('/api/create-new-company', middlewareControllers.verifyTokenUser,companyController.handleCreateNewCompany)
+    router.put('/api/update-company', middlewareControllers.verifyTokenUser,companyController.handleUpdateCompany)
+    router.get('/api/get-detail-company-by-id', companyController.getDetailCompanyById)
+    router.get('/api/get-detail-company-by-userId',companyController.getDetailCompanyByUserId)
 
     return app.use("/", router);
 }
