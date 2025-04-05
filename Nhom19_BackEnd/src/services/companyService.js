@@ -1,5 +1,6 @@
 import db from "../models/index";
 require("dotenv").config();
+
 let handleCreateNewCompany = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -94,6 +95,253 @@ let handleCreateNewCompany = (data) => {
     }
   });
 };
+
+let checkCompany = (name, id = null) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!name) {
+              resolve({
+                  errCode: 1,
+                  errMessage: 'Missing required parameters!'
+              })
+          } else {
+              let company = null
+              if (id) {
+                  company = await db.Company.findOne({
+                      where: { name: name, id: { [Op.ne]: id } }
+                  })
+              }
+              else {
+                  company = await db.Company.findOne({
+                      where: { name: name }
+                  })
+              }
+              if (company) {
+                  resolve(true)
+              } else {
+                  resolve(false)
+              }
+          }
+
+
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+let handleUpdateCompany = (data) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!data.id || !data.name || !data.phonenumber || !data.address || !data.descriptionHTML || !data.descriptionMarkdown || !data.amountEmployer) {
+              resolve({
+                  errCode: 1,
+                  errMessage: 'Missing required parameters !'
+              })
+          } else {
+              if (await checkCompany(data.name, data.id)) {
+                  resolve({
+                      errCode: 2,
+                      errMessage: 'Tên công ty đã tồn tại'
+                  })
+              }
+              else {
+
+                  let res = await db.Company.findOne({
+                      where: {
+                          id: data.id
+                      },
+                      raw: false
+                  })
+                  if (res) {
+                      if (res.statusCode == "S1") {
+                          if (data.thumbnail) {
+                              let thumbnailUrl = ""
+                              const uploadedThumbnailResponse = await cloudinary.uploader.upload(data.thumbnail, {
+                                  upload_preset: 'dev_setups'
+                              })
+                              thumbnailUrl = uploadedThumbnailResponse.url
+                              res.thumbnail = thumbnailUrl
+                          }
+                          if (data.coverimage) {
+                              let coverImageUrl = ""
+                              const uploadedcoverImageResponse = await cloudinary.uploader.upload(data.coverimage, {
+                                  upload_preset: 'dev_setups'
+                              })
+                              coverImageUrl = uploadedcoverImageResponse.url
+                              res.coverimage = coverImageUrl
+                          }
+                          res.name = data.name
+                          res.descriptionHTML = data.descriptionHTML
+                          res.descriptionMarkdown = data.descriptionMarkdown
+                          res.website = data.website
+                          res.address = data.address
+                          res.amountEmployer = data.amountEmployer
+                          res.taxnumber = data.taxnumber
+                          res.phonenumber = data.phonenumber
+                          if (data.file) {
+                              res.file = data.file
+                              res.censorCode = 'CS3'
+                          }
+                          else if (res.file){
+                              res.censorCode = 'CS3'
+                          }
+                          else {
+                              res.censorCode = 'CS2'
+                          }
+                          await res.save();
+                          resolve({
+                              errCode: 0,
+                              errMessage: 'Đã sửa thông tin công ty thành công'
+                          })
+                      }
+                      else {
+                          resolve({
+                              errCode: 2,
+                              errMessage: 'Công ty bạn đã bị chặn không thể thay đổi thông tin'
+                          })
+                      }
+                  }
+                  else {
+                      resolve({
+                          errCode: 2,
+                          errMessage: 'Không tìm thấy công ty'
+                      })
+                  }
+              }
+
+          }
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+let getDetailCompanyById = (id) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!id) {
+              resolve({
+                  errCode: 1,
+                  errMessage: 'Missing required parameters !'
+              })
+          } else {
+
+              let company = await db.Company.findOne({
+                  where: { id: id },
+                  include: [
+                      { model: db.Allcode, as: 'censorData', attributes: ['value', 'code'] },
+                  ],
+                  nest: true,
+                  raw: true
+              })
+              if (!company) {
+                  resolve({
+                      errCode: 0,
+                      errorMessage: 'Không tồn tại công ty',
+                  })
+              }
+              else {
+                  let listUserOfCompany = await db.User.findAll({
+                      where: { companyId: company.id },
+                      attributes: ['id'],
+                  })
+                  listUserOfCompany = listUserOfCompany.map(item => {
+                      return {
+                          userId: item.id
+                      }
+                  })
+                  company.postData = await db.Post.findAll({
+                      where: {
+                          [Op.and]: [{ statusCode: 'PS1' }, { [Op.or]: listUserOfCompany }]
+                      },
+                      order: [['createdAt', 'DESC']],
+                      limit: 5,
+                      offset: 0,
+                      attributes: {
+                          exclude: ['detailPostId']
+                      },
+                      nest: true,
+                      raw: true,
+                      include: [
+                          {
+                              model: db.DetailPost, as: 'postDetailData', attributes: ['id', 'name', 'descriptionHTML', 'descriptionMarkdown', 'amount'],
+                              include: [
+                                  { model: db.Allcode, as: 'jobTypePostData', attributes: ['value', 'code'] },
+                                  { model: db.Allcode, as: 'workTypePostData', attributes: ['value', 'code'] },
+                                  { model: db.Allcode, as: 'salaryTypePostData', attributes: ['value', 'code'] },
+                                  { model: db.Allcode, as: 'jobLevelPostData', attributes: ['value', 'code'] },
+                                  { model: db.Allcode, as: 'genderPostData', attributes: ['value', 'code'] },
+                                  { model: db.Allcode, as: 'provincePostData', attributes: ['value', 'code'] },
+                                  { model: db.Allcode, as: 'expTypePostData', attributes: ['value', 'code'] },
+                              ]
+                          },
+                      ]
+                  })
+                  if (company.file)
+                  {
+                      company.file = new Buffer(company.file, 'base64').toString('binary')
+                  }
+                  resolve({
+                      errCode: 0,
+                      data: company,
+                  })
+              }
+          }
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+let getDetailCompanyByUserId = (data) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!data.userId && !data.companyId) {
+              resolve({
+                  errCode: 1,
+                  errMessage: 'Missing required parameters !'
+              })
+          } else {
+              let company
+              if (data.userId !== 'null') {
+                  let user = await db.User.findOne({
+                      where: {id: data.userId},
+                      attributes: {
+                          exclude: ['userId']
+                      }
+                  })
+                  company = await db.Company.findOne({
+                      where : {id: user.companyId}
+                  })
+              }
+              else {
+                  company = await db.Company.findOne({
+                      where: { id: data.companyId }
+                  })
+              }
+              if (!company) {
+                  resolve({
+                      errCode: 2,
+                      errMessage: "Không tìm thấy công ty người dùng sở hữu"
+                  })
+              }
+              else {
+                  if (company.file) {
+                      company.file = new Buffer(company.file,'base64').toString('binary')
+                  }
+                  resolve({
+                      errCode: 0,
+                      data: company,
+                  })
+              }
+          }
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
 module.exports = {
   handleCreateNewCompany: handleCreateNewCompany,
 };
