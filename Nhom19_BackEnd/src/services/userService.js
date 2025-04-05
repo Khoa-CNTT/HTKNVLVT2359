@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 require("dotenv").config();
 
 const salt = bcrypt.genSaltSync(10);
+
 let handleCreateNewUser = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -79,6 +80,7 @@ let handleCreateNewUser = (data) => {
     }
   });
 };
+
 let handleLogin = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -140,7 +142,279 @@ let handleLogin = (data) => {
     }
   });
 };
+
+let hashUserPasswordFromBcrypt = (password) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          let hashPassword = await bcrypt.hashSync(password, salt);
+          resolve(hashPassword);
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+let banUser = (userId) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+
+          if (!userId) {
+              resolve({
+                  errCode: 1,
+                  errMessage: `Missing required parameters !`
+              })
+          } else {
+              let foundUser = await db.User.findOne({
+                  where: { id: userId },
+                  attributes: {
+                      exclude: ['userId']
+                  }
+              })
+              if (!foundUser) {
+                  resolve({
+                      errCode: 2,
+                      errMessage: `Người dùng không tồn tại`
+                  })
+              }
+              else{
+                  let account = await db.Account.findOne({
+                      where: {userId: userId},
+                      raw: false
+                  })
+                  if (account)
+                  {
+                      account.statusCode = 'S2'
+                      await account.save()
+                      resolve({
+                          errCode: 0,
+                          message: `Người dùng đã ngừng kích hoạt`
+                      })
+                  }
+              }
+          }
+
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+let unbanUser = (userId) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+
+          if (!userId) {
+              resolve({
+                  errCode: 1,
+                  errMessage: `Missing required parameters !`
+              })
+          } else {
+              let foundUser = await db.User.findOne({
+                  where: { id: userId },
+                  attributes: {
+                      exclude: ['userId']
+                  }
+              })
+              if (!foundUser) {
+                  resolve({
+                      errCode: 2,
+                      errMessage: `Người dùng không tồn tại`
+                  })
+              }
+              else{
+                  let account = await db.Account.findOne({
+                      where: {userId: userId},
+                      raw: false
+                  })
+                  if (account)
+                  {
+                      account.statusCode = 'S1'
+                      await account.save()
+                      resolve({
+                          errCode: 0,
+                          message: `Người dùng đã kích hoạt`
+                      })
+                  }
+              }
+          }
+
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+let updateUserData = (data) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!data.id) {
+              resolve({
+                  errCode: 2,
+                  errMessage: `Missing required parameters`
+              })
+          } else {
+              let user = await db.User.findOne({
+                  where: { id: data.id },
+                  raw: false,
+                  attributes: {
+                      exclude: ['userId']
+                  }
+              })
+              let account = await db.Account.findOne({
+                  where: {userId: data.id},
+                  raw:false
+              })
+              if (user && account) {
+                  user.firstName = data.firstName
+                  user.lastName = data.lastName
+                  user.address = data.address
+                  user.genderCode = data.genderCode
+                  user.dob = data.dob
+                  user.email = data.email
+                  if (data.image) {
+                      let imageUrl = ""
+                      const uploadedResponse = await cloudinary.uploader.upload(data.image, {
+                          upload_preset: 'dev_setups'
+                      })
+                      imageUrl = uploadedResponse.url
+                      user.image = imageUrl
+                  }
+                  await user.save();
+                  if (data.roleCode)
+                  account.roleCode = data.roleCode
+                  await account.save();
+                  let temp = {
+                      address: user.address,
+                      companyId: user.companyId,
+                      dob: user.dob,
+                      email: user.email,
+                      firstName: user.firstName,
+                      genderCode: user.genderCode,
+                      id: user.id,
+                      image: user.image,
+                      lastName: user.lastName,
+                      roleCode: account.roleCode
+                  }
+                  delete temp.file
+                  resolve({
+                      errCode: 0,
+                      message: 'Đã chỉnh sửa thành công',
+                      user: temp
+                  })
+              } else {
+                  resolve({
+                      errCode: 1,
+                      errMessage: 'User not found!'
+                  })
+              }
+          }
+
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+let getAllUser = (data) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!data.limit || !data.offset) {
+              resolve({
+                  errCode: 1,
+                  errMessage: 'Missing required parameter !'
+              })
+          } else {
+              let objectFilter = {
+                  limit: +data.limit,
+                  offset: +data.offset,
+                  attributes: {
+                      exclude: ['password']
+                  },
+                  include: [
+                      { model: db.Allcode, as: 'roleData' ,attributes: ['code','value'] }, 
+                      { model: db.Allcode, as: 'statusAccountData',attributes: ['code','value']},
+                      { model: db.User, as: 'userAccountData', attributes: {
+                          exclude: ['userId']
+                      },
+                          include: [
+                              { model: db.Allcode, as: 'genderData', attributes: ['value', 'code'] },
+                          ]
+                      }
+                  ],
+                  raw: true,
+                  nest: true,
+              }
+              if (data.search) {
+                  objectFilter.where = {phonenumber: {[Op.like]: `%${data.search}%`}}
+              }
+              let res = await db.Account.findAndCountAll(objectFilter)
+              resolve({
+                  errCode: 0,
+                  data: res.rows,
+                  count: res.count
+              })
+          }
+
+      } catch (error) {
+          reject(error.message)
+      }
+  })
+}
+let getDetailUserById = (userid) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!userid) {
+              resolve({
+                  errCode: 1,
+                  errMessage: 'Missing required parameters!'
+              })
+          } else {
+              let res = await db.Account.findOne({
+                  where: { userId: userid, statusCode: 'S1' },
+                  attributes: {
+                      exclude: ['password']
+                  },
+                  include: [
+                      { model: db.Allcode, as: 'roleData', attributes: ['value', 'code'] },
+                      { model: db.User, as: 'userAccountData', attributes: {
+                          exclude: ['userId'],
+                      },
+                          include: [
+                              { model: db.Allcode, as: 'genderData', attributes: ['value', 'code'] },
+                              { model: db.UserSetting, as: 'userSettingData'},
+                          ]
+                      },
+                  ],
+                  raw: true,
+                  nest: true
+              })
+              if (res.userAccountData.userSettingData.file) {
+                  res.userAccountData.userSettingData.file = new Buffer.from(res.userAccountData.userSettingData.file, 'base64').toString('binary');
+              }
+              let listSkills = await db.UserSkill.findAll({
+                  where: {userId: res.userAccountData.id},
+                  include: db.Skill,
+                  raw: true,
+                  nest: true
+              })
+              res.listSkills= listSkills
+              resolve({
+                  errCode: 0,
+                  data: res,
+              })
+          }
+      } catch (error) {
+          reject(error.message)
+      }
+  })
+}
+
 module.exports = {
   handleCreateNewUser: handleCreateNewUser,
   handleLogin: handleLogin,
+  banUser: banUser,
+  unbanUser: unbanUser,
+  updateUserData: updateUserData,
+  getAllUser: getAllUser,
+  getDetailUserById: getDetailUserById,
 };

@@ -1,13 +1,14 @@
-.container-company {
-    .title {
+.container-company{
+
+    .title{
         font-weight: 700;
         text-align: center;
-        margin: 20px 0;
+        margin:  20px 0;
     }
-    .list-company {
-        margin: 0 80px;
+    .list-company{
+        margin:0 80px;
 
-        .box-item-company {
+        .box-item-company{
             background: #fff 0 0 no-repeat padding-box;
             border-radius: 5px;
             box-shadow: -1px 1px 4px #0000000d;
@@ -15,27 +16,27 @@
             margin-bottom: 24px;
             overflow: hidden;
 
-            .company-banner {
+            .company-banner{
                 height: 180px;
                 margin-bottom: 16px;
                 overflow: hidden;
                 position: relative;
 
-                a {
+                a{
                     color: #0d6efd;
                     text-decoration: underline;
 
-                    .cover-wrapper {
+                    .cover-wrapper{
                         height: 150px;
 
-                        img {
+                        img{
                             height: 100%;
                             width: 100%;
                             object-fit: cover;
                         }
                     }
                 }
-                .company-logo {
+                .company-logo{
                     background: #fff;
                     border: 1px solid #eee;
                     border-radius: 5px;
@@ -45,19 +46,19 @@
                     position: absolute;
                     width: 64px;
 
-                    img {
+                    img{
                         height: auto;
                         max-width: 100%;
                     }
                 }
             }
-            .company-info {
-                padding: 0 16px;
-                h3 {
+            .company-info{
+                padding: 0 16px; 
+                h3{
                     line-height: 10px;
                     margin-bottom: 0;
 
-                    .company-name {
+                    .company-name{
                         color: #333;
                         font: normal normal 700 14px/20px Roboto;
                         text-align: left;
@@ -65,20 +66,20 @@
                         text-transform: uppercase;
                     }
                 }
-                .company-description {
+                .company-description{
                     color: #555;
                     font-size: 14px;
                     letter-spacing: 0;
                     padding-top: 16px;
 
-                    p {
+                    p{
                         margin-bottom: 1rem;
                         margin-top: 0;
                         overflow: hidden;
                         text-overflow: ellipsis;
                         display: -webkit-box;
                         -webkit-line-clamp: 5; /* number of lines to show */
-                        line-clamp: 5;
+                                line-clamp: 5; 
                         -webkit-box-orient: vertical;
                     }
                 }
