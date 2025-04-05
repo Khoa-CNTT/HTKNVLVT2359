@@ -15,7 +15,16 @@ let initWebRoutes = (app) => {
     router.get('/api/get-all-user', middlewareControllers.verifyTokenUser,userController.getAllUser)
     router.get('/api/get-detail-user-by-id', middlewareControllers.verifyTokenUser,userController.getDetailUserById)
 
+     //===================API ALLCODE========================//
+     router.post('/api/create-new-all-code',middlewareControllers.verifyTokenAdmin ,allcodeController.handleCreateNewAllCode)
+     router.put('/api/update-all-code', middlewareControllers.verifyTokenAdmin,allcodeController.handleUpdateAllCode)
+     router.delete('/api/delete-all-code', middlewareControllers.verifyTokenAdmin,allcodeController.handleDeleteAllCode)
+     router.get('/api/get-all-code', allcodeController.getAllCodeService)
+     router.get('/api/get-list-allcode', allcodeController.getListAllCodeService)
+     router.get('/api/get-detail-all-code-by-code', allcodeController.getDetailAllcodeByCode)
+     router.get('/api/get-list-job-count-post', allcodeController.getListJobTypeAndCountPost)
 
+     
     //==================API COMPANY=========================//
     router.post('/api/create-new-company', middlewareControllers.verifyTokenUser,companyController.handleCreateNewCompany)
     router.put('/api/update-company', middlewareControllers.verifyTokenUser,companyController.handleUpdateCompany)

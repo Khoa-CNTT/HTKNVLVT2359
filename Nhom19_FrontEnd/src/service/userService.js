@@ -42,6 +42,42 @@ const handleLoginService = (data) => {
 
 }
 
+//===============ALL CODE========================//
+const getAllCodeService = (type) => {
+    return axios.get(`/api/get-all-code?type=${type}`)
+
+}
+const getListAllCodeService = (data) => {
+    return axios.get(`/api/get-list-allcode?type=${data.type}&limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
+
+}
+
+const getListJobTypeAndCountPost = (data) => {
+    return axios.get(`/api/get-list-job-count-post?limit=${data.limit}&offset=${data.offset}`)
+
+}
+
+const createAllCodeService = (data) => {
+    return axios.post(`/api/create-new-all-code`, data)
+
+}
+
+const getDetailAllcodeByCode = (code) => {
+    return axios.get(`/api/get-detail-all-code-by-code?code=${code}`)
+
+}
+const UpdateAllcodeService = (data) => {
+    return axios.put(`/api/update-all-code`, data)
+
+}
+const DeleteAllcodeService = (allcodeId) => {
+    return axios.delete(`/api/delete-all-code`, {
+        data: {
+            code: allcodeId
+        }
+    })
+}
+
 
 //================================== COMPANY ============================
 const createCompanyService = (data) => {
