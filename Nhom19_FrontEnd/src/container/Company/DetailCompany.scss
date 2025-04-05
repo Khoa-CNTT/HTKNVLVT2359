@@ -1,4 +1,4 @@
-.container-detail-company {
+.container-detail-company{
     background-color: #e5e5e5;
 
     .company-cover {
@@ -8,7 +8,7 @@
             height: 236px;
             overflow: hidden;
 
-            img {
+            img{
                 height: inherit;
                 -o-object-fit: cover;
                 object-fit: cover;
@@ -39,7 +39,7 @@
                     top: -65px;
                     width: 140px;
 
-                    img {
+                    img{
                         border: 1px solid #eee;
                         border-radius: 10px;
                         height: 100%;
@@ -47,6 +47,8 @@
                         object-fit: contain;
                     }
                 }
+                
+                
             }
             .company-info {
                 padding-top: 5px;
@@ -57,19 +59,20 @@
                     font-size: 24px;
                     margin-top: 0;
                 }
-                .website {
+                .website{
                     font-size: 15px;
                     padding-right: 40px;
-
-                    i {
+                     
+                    i{
                         padding-right: 5px;
                     }
-                    a {
+                    a{
                         color: black;
                     }
                 }
-                .company-size {
-                    i {
+                .company-size{
+
+                    i{
                         padding-right: 5px;
                     }
                 }
@@ -104,8 +107,9 @@
             }
         }
     }
-    .detail {
-        .box-white {
+    .detail{
+        .box-white{
+            
             word-break: break-word;
             background: #fff;
             border: 1px solid #eee;
@@ -114,15 +118,15 @@
             margin-bottom: 16px;
             padding: 24px;
 
-            .title {
+            .title{
                 border-left: 5px solid #00b14f;
                 padding-left: 8px;
             }
-            .box-body {
+            .box-body{
                 padding-top: 19px;
             }
         }
-        .job-listing {
+        .job-listing{
             .job-item {
                 background: #fff 0 0 no-repeat padding-box;
                 border: 1px solid #f4f4f4;
@@ -131,20 +135,22 @@
                 margin: auto auto 16px;
                 padding: 16px;
                 box-shadow: 0 5px 20px 0 transparent;
-                transition: box-shadow 0.3s;
+                transition: box-shadow .3s;
 
                 .avatar {
                     height: 80px;
                     overflow: hidden;
                     width: 80px;
 
-                    a {
+                    a{
                         img {
                             border-radius: 5px;
                             height: auto;
                             width: 48px;
                         }
                     }
+                        
+                    
                 }
                 .body {
                     display: flex;
@@ -157,7 +163,7 @@
                         width: 100%;
                         justify-content: space-between;
                     }
-
+                  
                     .ml-auto {
                         margin-left: 10px !important;
                         .title-job {
@@ -170,19 +176,20 @@
                             line-height: 24px;
                             margin: initial;
 
-                            a {
+                           a {
                                 color: #212f3f;
                                 font-size: 16px;
                                 margin-bottom: 6px;
                                 text-decoration: none;
                                 vertical-align: top;
                                 text-align: left;
-                                i {
+                                i{
                                     color: #00b14f;
                                     font-size: 13px;
                                     margin-left: 5px;
                                 }
                             }
+                            
                         }
                         label {
                             background: #edeef0 0 0 no-repeat padding-box;
@@ -210,21 +217,21 @@
                 }
             }
         }
-        .box-address {
-            .box-body {
-                p {
+        .box-address{
+            .box-body{
+                p{
                     color: black;
 
-                    i {
+                    i{
                         color: #00b14f;
                         margin-right: 4px;
                     }
                 }
             }
         }
-        .box-sharing {
-            .box-body {
-                p {
+        .box-sharing{
+            .box-body{
+                p{
                     font-size: 14px;
                 }
                 .box-copy {
@@ -238,10 +245,10 @@
                         border-radius: 5px;
                         font-size: 12px;
                         line-height: 16px;
-                        overflow: hidden !important;
+                        overflow: hidden!important;
                         padding: 0 8px;
-                        text-overflow: ellipsis !important;
-                        white-space: nowrap !important;
+                        text-overflow: ellipsis!important;
+                        white-space: nowrap!important;
                         width: 86%;
                     }
                     .btn-copy {
@@ -254,15 +261,16 @@
                             height: 40px;
                             width: 40px;
 
-                            i {
+                             i {
                                 color: #00b14f;
                                 font-size: 18px;
                             }
                         }
                     }
                 }
-                .box-share {
-                    a {
+                .box-share{
+
+                    a{
                         margin-right: 16px;
                     }
                 }
