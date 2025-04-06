@@ -35,6 +35,11 @@ const handleLoginService = (data) => {
   return axios.post(`/api/login`, data);
 };
 
+const UpdateUserSettingService = (data) => {
+    return axios.put(`/api/setDataUserSetting`, data)
+
+}
+
 //===============ALL CODE========================//
 const getAllCodeService = (type) => {
   return axios.get(`/api/get-all-code?type=${type}`);
