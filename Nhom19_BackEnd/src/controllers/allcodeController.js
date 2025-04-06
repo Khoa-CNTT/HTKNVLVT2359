@@ -1,5 +1,70 @@
 import allcodeService from '../services/allcodeService';
 
+
+let handleCreateNewSkill = async (req, res) => {
+    try {
+        let data = await allcodeService.handleCreateNewSkill(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let handleDeleteSkill = async (req, res) => {
+    try {
+        let data = await allcodeService.handleDeleteSkill(req.body.id);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let getListSkill = async (req, res) => {
+    try {
+        let data = await allcodeService.getListSkill(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let handleUpdateSkill = async (req, res) => {
+    try {
+        let data = await allcodeService.handleUpdateSkill(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+let getDetailSkillById = async (req, res) => {
+    try {
+        let data = await allcodeService.getDetailSkillById(req.query.id);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
 let handleCreateNewAllCode = async (req, res) => {
     try {
         let data = await allcodeService.handleCreateNewAllCode(req.body);
@@ -104,80 +169,15 @@ let getListAllCodeService = async (req, res) => {
         })
     }
 }
-
-let handleCreateNewSkill = async (req, res) => {
-    try {
-        let data = await allcodeService.handleCreateNewSkill(req.body);
-        return res.status(200).json(data);
-    } catch (error) {
-        console.log(error)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from server'
-        })
-    }
-}
-
-let handleDeleteSkill = async (req, res) => {
-    try {
-        let data = await allcodeService.handleDeleteSkill(req.body.id);
-        return res.status(200).json(data);
-    } catch (error) {
-        console.log(error)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from server'
-        })
-    }
-}
-
-let getListSkill = async (req, res) => {
-    try {
-        let data = await allcodeService.getListSkill(req.query);
-        return res.status(200).json(data);
-    } catch (error) {
-        console.log(error)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from server'
-        })
-    }
-}
-
-let handleUpdateSkill = async (req, res) => {
-    try {
-        let data = await allcodeService.handleUpdateSkill(req.body);
-        return res.status(200).json(data);
-    } catch (error) {
-        console.log(error)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from server'
-        })
-    }
-}
-let getDetailSkillById = async (req, res) => {
-    try {
-        let data = await allcodeService.getDetailSkillById(req.query.id);
-        return res.status(200).json(data);
-    } catch (error) {
-        console.log(error)
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from server'
-        })
-    }
-}
-
 module.exports = {
-    handleCreateNewAllCode: handleCreateNewAllCode,
-    getAllCodeService: getAllCodeService,
-    getDetailAllcodeByCode: getDetailAllcodeByCode,
-    handleDeleteAllCode: handleDeleteAllCode,
-    getAllSkillByJobCode, getListSkill,
     getListAllCodeService: getListAllCodeService,
     getListJobTypeAndCountPost: getListJobTypeAndCountPost,
     handleCreateNewSkill, handleDeleteSkill,
     handleUpdateSkill, getDetailSkillById,
     handleUpdateAllCode: handleUpdateAllCode,
+    handleCreateNewAllCode: handleCreateNewAllCode,
+    getAllCodeService: getAllCodeService,
+    getDetailAllcodeByCode: getDetailAllcodeByCode,
+    handleDeleteAllCode: handleDeleteAllCode,
+    getAllSkillByJobCode, getListSkill
 }
