@@ -91,6 +91,19 @@ let getDetailUserById = async (req, res) => {
   }
 }
 
+let setDataUserSetting = async (req, res) => {
+  try {
+  let data = await userService.setDataUserSetting(req.body);
+      return res.status(200).json(data);
+  } catch (error) {
+      console.log(error)
+      return res.status(200).json({
+          errCode: -1,
+          errMessage: 'Error from server'
+      })
+  }
+}
+
 module.exports = {
   handleCreateNewUser: handleCreateNewUser,
   handleLogin: handleLogin,
@@ -99,4 +112,5 @@ module.exports = {
   handleUnbanUser: handleUnbanUser,
   getAllUser: getAllUser,
   getDetailUserById: getDetailUserById,
+  setDataUserSetting
 };

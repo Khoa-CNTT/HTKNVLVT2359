@@ -29,6 +29,8 @@ let initWebRoutes = (app) => {
     middlewareControllers.verifyTokenUser,
     userController.getDetailUserById
   );
+  router.put('/api/setDataUserSetting', userController.setDataUserSetting)
+
 
   //===================API ALLCODE========================//
   router.post(
