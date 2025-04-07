@@ -1,17 +1,21 @@
 import axios from "../axios";
 
 //==================USER==========================//
+
 const getAllUsers = (data) => {
   return axios.get(
     `/api/get-all-user?limit=${data.limit}&offset=${data.offset}&search=${data.search}`
   );
 };
+
 const createNewUser = (data) => {
   return axios.post(`/api/create-new-user`, data);
 };
+
 const UpdateUserService = (data) => {
   return axios.put(`/api/update-user`, data);
 };
+
 const BanUserService = (userId) => {
   return axios.post(`/api/ban-user`, {
     data: {
@@ -31,6 +35,7 @@ const UnbanUserService = (userId) => {
 const getDetailUserById = (id) => {
   return axios.get(`/api/get-detail-user-by-id?id=${id}`);
 };
+
 const handleLoginService = (data) => {
   return axios.post(`/api/login`, data);
 };
@@ -41,6 +46,7 @@ const UpdateUserSettingService = (data) => {
 }
 
 //===============ALL CODE========================//
+
 const getAllCodeService = (type) => {
   return axios.get(`/api/get-all-code?type=${type}`);
 };
@@ -60,12 +66,6 @@ const createAllCodeService = (data) => {
   return axios.post(`/api/create-new-all-code`, data);
 };
 
-const getDetailAllcodeByCode = (code) => {
-  return axios.get(`/api/get-detail-all-code-by-code?code=${code}`);
-};
-const UpdateAllcodeService = (data) => {
-  return axios.put(`/api/update-all-code`, data);
-};
 const DeleteAllcodeService = (allcodeId) => {
   return axios.delete(`/api/delete-all-code`, {
     data: {
@@ -74,10 +74,18 @@ const DeleteAllcodeService = (allcodeId) => {
   });
 };
 
+const UpdateAllcodeService = (data) => {
+  return axios.put(`/api/update-all-code`, data);
+};
+
 const getListSkill = (data) => {
   return axios.get(
     `/api/get-list-skill?categoryJobCode=${data.categoryJobCode}&limit=${data.limit}&offset=${data.offset}&search=${data.search}`
   );
+};
+
+const getDetailAllcodeByCode = (code) => {
+  return axios.get(`/api/get-detail-all-code-by-code?code=${code}`);
 };
 
 const getAllSkillByJobCode = (categoryJobCode) => {
@@ -93,6 +101,7 @@ const createSkilleService = (data) => {
 const UpdateSkillService = (data) => {
   return axios.put(`/api/update-skill`, data);
 };
+
 const DeleteSkillService = (skillId) => {
   return axios.delete(`/api/delete-skill`, {
     data: {
@@ -109,32 +118,33 @@ const getDetailSkillById = (id) => {
 const createCompanyService = (data) => {
   return axios.post(`/api/create-new-company`, data);
 };
+
+const getDetailCompanyById = (id) => {
+  return axios.get(`/api/get-detail-company-by-id?id=${id}`);
+};
+
 const getDetailCompanyByUserId = (userId, companyId) => {
   return axios.get(
     `/api/get-detail-company-by-userId?userId=${userId}&companyId=${companyId}`
   );
 };
-const getDetailCompanyById = (id) => {
-  return axios.get(`/api/get-detail-company-by-id?id=${id}`);
-};
-const updateCompanyService = (data) => {
-  return axios.put(`/api/update-company`, data);
-};
+
 const RecruitmentService = (data) => {
   return axios.put(`/api/add-user-company`, data);
 };
+
 const getAllUserByCompanyIdService = (data) => {
   return axios.get(
     `/api/get-all-user-by-companyId?companyId=${data.companyId}&limit=${data.limit}&offset=${data.offset}`
   );
 };
+
+const updateCompanyService = (data) => {
+  return axios.put(`/api/update-company`, data);
+};
+
 const QuitCompanyService = (data) => {
   return axios.put(`/api/quit-company`, data);
-};
-const getListCompany = (data) => {
-  return axios.get(
-    `/api/get-list-company?limit=${data.limit}&offset=${data.offset}&search=${data.search}`
-  );
 };
 
 const getAllCompany = (data) => {
@@ -147,6 +157,13 @@ const banCompanyService = (data) => {
   return axios.put(`/api/ban-company`, data);
 };
 
+const getListCompany = (data) => {
+  return axios.get(
+    `/api/get-list-company?limit=${data.limit}&offset=${data.offset}&search=${data.search}`
+  );
+};
+
+
 const unbanCompanyService = (data) => {
   return axios.put(`/api/unban-company`, data);
 };
@@ -154,6 +171,7 @@ const unbanCompanyService = (data) => {
 const accecptCompanyService = (data) => {
   return axios.put(`/api/accecpt-company`, data);
 };
+
 export {
   DeleteAllcodeService,
   UpdateAllcodeService,
