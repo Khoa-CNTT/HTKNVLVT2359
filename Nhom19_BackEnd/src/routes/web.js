@@ -80,11 +80,6 @@ let initWebRoutes = (app) => {
     middlewareControllers.verifyTokenAdmin,
     companyController.handleUnBanCompany
   );
-  router.put(
-    "/api/add-user-company",
-    middlewareControllers.verifyTokenUser,
-    companyController.handleAddUserCompany
-  );
   router.get("/api/get-list-company", companyController.getListCompany);
   router.get(
     "/api/get-detail-company-by-id",

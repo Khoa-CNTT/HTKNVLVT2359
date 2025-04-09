@@ -12,6 +12,7 @@ let handleCreateNewCompany = async (req, res) => {
     });
   }
 };
+
 let handleUpdateCompany = async (req, res) => {
   try {
     let data = await companyService.handleUpdateCompany(req.body);
@@ -24,6 +25,7 @@ let handleUpdateCompany = async (req, res) => {
     });
   }
 };
+
 let handleBanCompany = async (req, res) => {
   try {
     let data = await companyService.handleBanCompany(req.body.id);
@@ -36,6 +38,7 @@ let handleBanCompany = async (req, res) => {
     });
   }
 };
+
 let handleUnBanCompany = async (req, res) => {
   try {
     let data = await companyService.handleUnBanCompany(req.body.id);
@@ -48,6 +51,7 @@ let handleUnBanCompany = async (req, res) => {
     });
   }
 };
+
 let handleAddUserCompany = async (req, res) => {
   try {
     let data = await companyService.handleAddUserCompany(req.body);
@@ -60,6 +64,7 @@ let handleAddUserCompany = async (req, res) => {
     });
   }
 };
+
 let getListCompany = async (req, res) => {
   try {
     let data = await companyService.getListCompany(req.query);
@@ -72,6 +77,7 @@ let getListCompany = async (req, res) => {
     });
   }
 };
+
 let getDetailCompanyById = async (req, res) => {
   try {
     let data = await companyService.getDetailCompanyById(req.query.id);
@@ -84,6 +90,7 @@ let getDetailCompanyById = async (req, res) => {
     });
   }
 };
+
 let getDetailCompanyByUserId = async (req, res) => {
   try {
     let data = await companyService.getDetailCompanyByUserId(req.query);
@@ -96,6 +103,7 @@ let getDetailCompanyByUserId = async (req, res) => {
     });
   }
 };
+
 let getAllUserByCompanyId = async (req, res) => {
   try {
     let data = await companyService.getAllUserByCompanyId(req.query);
@@ -108,6 +116,7 @@ let getAllUserByCompanyId = async (req, res) => {
     });
   }
 };
+
 let handleQuitCompany = async (req, res) => {
   try {
     let data = await companyService.handleQuitCompany(req.body);
@@ -146,6 +155,7 @@ let handleAccecptCompany = async (req, res) => {
     });
   }
 };
+
 module.exports = {
   handleCreateNewCompany: handleCreateNewCompany,
   handleBanCompany: handleBanCompany,

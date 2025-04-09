@@ -52,6 +52,7 @@ let handleUpdateSkill = async (req, res) => {
         })
     }
 }
+
 let getDetailSkillById = async (req, res) => {
     try {
         let data = await allcodeService.getDetailSkillById(req.query.id);
@@ -169,6 +170,7 @@ let getListAllCodeService = async (req, res) => {
         })
     }
 }
+
 module.exports = {
     getListAllCodeService: getListAllCodeService,
     getListJobTypeAndCountPost: getListJobTypeAndCountPost,

@@ -1,5 +1,6 @@
 import db from "../models/index";
 require("dotenv").config();
+
 let checkCompany = (name, id = null) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -20,30 +21,6 @@ let checkCompany = (name, id = null) => {
           });
         }
         if (company) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-
-let checkUserPhone = (userPhone) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!userPhone) {
-        resolve({
-          errCode: 1,
-          errMessage: "Missing required parameters!",
-        });
-      } else {
-        let account = await db.Account.findOne({
-          where: { phonenumber: userPhone },
-        });
-        if (account) {
           resolve(true);
         } else {
           resolve(false);
@@ -149,6 +126,7 @@ let handleCreateNewCompany = (data) => {
     }
   });
 };
+
 let handleUpdateCompany = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -239,13 +217,14 @@ let handleUpdateCompany = (data) => {
     }
   });
 };
+
 let handleBanCompany = (companyId) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!companyId) {
         resolve({
           errCode: 1,
-          errMessage: `Missing required parameters !`,
+          errMessage: `Trường không được để trống !`,
         });
       } else {
         let foundCompany = await db.Company.findOne({
@@ -270,6 +249,7 @@ let handleBanCompany = (companyId) => {
     }
   });
 };
+
 let handleUnBanCompany = (companyId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -302,6 +282,7 @@ let handleUnBanCompany = (companyId) => {
     }
   });
 };
+
 let handleAccecptCompany = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -364,72 +345,7 @@ let handleAccecptCompany = (data) => {
     }
   });
 };
-let handleAddUserCompany = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!data.phonenumber || !data.companyId) {
-        resolve({
-          errCode: 1,
-          errMessage: "Missing required parameters !",
-        });
-      } else {
-        let company = await db.Company.findOne({
-          where: { id: data.companyId },
-        });
-        if (company) {
-          let isExist = await checkUserPhone(data.phonenumber);
-          if (isExist) {
-            let account = await db.Account.findOne({
-              where: {
-                phonenumber: data.phonenumber,
-              },
-              raw: false,
-            });
-            if (account.roleCode != "EMPLOYER") {
-              resolve({
-                errCode: 1,
-                errMessage: "Tài khoản không phải là nhà tuyển dụng",
-              });
-            } else {
-              let user = await db.User.findOne({
-                where: { id: account.userId },
-                attributes: {
-                  exclude: ["userId"],
-                },
-                raw: false,
-              });
-              if (user.companyId) {
-                resolve({
-                  errCode: 3,
-                  errMessage: "Nhân viên đã có công ty",
-                });
-              } else {
-                user.companyId = data.companyId;
-                await user.save();
-                resolve({
-                  errCode: 0,
-                  errMessage: "Đã thêm nhà tuyển dụng vào công ty",
-                });
-              }
-            }
-          } else {
-            resolve({
-              errCode: 2,
-              errMessage: "Số điện thoại không tồn tại !",
-            });
-          }
-        } else {
-          resolve({
-            errCode: 2,
-            errMessage: "Công ty không tồn tại !",
-          });
-        }
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
+
 let getListCompany = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -462,6 +378,7 @@ let getListCompany = (data) => {
     }
   });
 };
+
 let getDetailCompanyById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -624,6 +541,7 @@ let getDetailCompanyByUserId = (data) => {
     }
   });
 };
+
 let getAllUserByCompanyId = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -680,6 +598,7 @@ let getAllUserByCompanyId = (data) => {
     }
   });
 };
+
 let handleQuitCompany = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -736,6 +655,7 @@ let handleQuitCompany = (data) => {
     }
   });
 };
+
 let getAllCompanyByAdmin = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -797,12 +717,12 @@ let getAllCompanyByAdmin = (data) => {
     }
   });
 };
+
 module.exports = {
   handleCreateNewCompany: handleCreateNewCompany,
   handleUpdateCompany: handleUpdateCompany,
   handleBanCompany: handleBanCompany,
   handleUnBanCompany: handleUnBanCompany,
-  handleAddUserCompany: handleAddUserCompany,
   getListCompany: getListCompany,
   getDetailCompanyById: getDetailCompanyById,
   getDetailCompanyByUserId: getDetailCompanyByUserId,
