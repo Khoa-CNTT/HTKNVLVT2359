@@ -129,10 +129,6 @@ const getDetailCompanyByUserId = (userId, companyId) => {
   );
 };
 
-const RecruitmentService = (data) => {
-  return axios.put(`/api/add-user-company`, data);
-};
-
 const getAllUserByCompanyIdService = (data) => {
   return axios.get(
     `/api/get-all-user-by-companyId?companyId=${data.companyId}&limit=${data.limit}&offset=${data.offset}`
