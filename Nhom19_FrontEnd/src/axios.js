@@ -6,6 +6,7 @@ const instance = axios.create({
     baseURL: url,
     //  withCredentials: true
 });
+
 if(localStorage.getItem("token_user")){
     instance.interceptors.request.use(
         config =>{
@@ -17,6 +18,7 @@ if(localStorage.getItem("token_user")){
         }
     );
 }
+
 instance.interceptors.response.use(
     (res) => {
       return res;
