@@ -22,6 +22,7 @@ const SettingUser = () => {
     isTakeMail: 0,
     file: "",
   });
+
   let handleOnChangeFile = async (event) => {
     let data = event.target.files;
     let file = data[0];
@@ -63,6 +64,7 @@ const SettingUser = () => {
       }
     }
   };
+
   let getListSkill = async (jobType) => {
     let res = await getAllSkillByJobCode(jobType);
     let listSkills = res.data.map((item) => ({
@@ -90,6 +92,7 @@ const SettingUser = () => {
       file: data.userAccountData.userSettingData.file ?? "",
     });
   };
+
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     if (userData) {
@@ -152,32 +155,6 @@ const SettingUser = () => {
     }
   };
 
-  let handleSaveUser = async () => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    let settingData = {
-      categoryJobCode: inputValues.jobType,
-      addressCode: inputValues.jobProvince,
-      experienceJobCode: inputValues.exp,
-      isTakeMail: inputValues.isTakeMail,
-      isFindJob: inputValues.isFindJob,
-      file: inputValues.file,
-      salaryJobCode: inputValues.salary,
-      listSkills: inputValues.skills,
-    };
-    let res = await UpdateUserSettingService({
-      id: userData.id,
-      data: settingData,
-    });
-    if (res && res.errCode === 0) {
-      toast.success("Cập nhật người dùng thành công");
-      window.location.reload();
-    } else {
-      toast.error(res.errMessage);
-    }
-  };
-  let handleSearchMulti = (input, option) => {
-    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-  };
   return (
     <div className="">
       <div className="col-12 grid-margin">

@@ -1,16 +1,16 @@
 import React from 'react'
-
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
 } from "react-router-dom";
+    
 import UserCv from '../system/Cv/UserCv';
 import ChangePassword from '../system/User/ChangePassword';
 import CandidateInfo from './CandidateInfo';
 import ManageCvCandidate from './ManageCvCandidate';
 import SettingUser from './SettingUser';
+
 const HomeCandidate = () => {
     return (
 
