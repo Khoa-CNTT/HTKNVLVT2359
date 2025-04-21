@@ -64,7 +64,44 @@ let handleAddUserCompany = async (req, res) => {
     });
   }
 };
+let handleQuitCompany = async (req, res) => {
+  try {
+    let data = await companyService.handleQuitCompany(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
 
+let getAllCompanyByAdmin = async (req, res) => {
+  try {
+    let data = await companyService.getAllCompanyByAdmin(req.query);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
+let handleAccecptCompany = async (req, res) => {
+  try {
+    let data = await companyService.handleAccecptCompany(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
 let getListCompany = async (req, res) => {
   try {
     let data = await companyService.getListCompany(req.query);
@@ -107,45 +144,6 @@ let getDetailCompanyByUserId = async (req, res) => {
 let getAllUserByCompanyId = async (req, res) => {
   try {
     let data = await companyService.getAllUserByCompanyId(req.query);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.log(error);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
-
-let handleQuitCompany = async (req, res) => {
-  try {
-    let data = await companyService.handleQuitCompany(req.body);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.log(error);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
-
-let getAllCompanyByAdmin = async (req, res) => {
-  try {
-    let data = await companyService.getAllCompanyByAdmin(req.query);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.log(error);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
-
-let handleAccecptCompany = async (req, res) => {
-  try {
-    let data = await companyService.handleAccecptCompany(req.body);
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
