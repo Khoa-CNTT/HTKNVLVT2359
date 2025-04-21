@@ -29,8 +29,7 @@ let initWebRoutes = (app) => {
     middlewareControllers.verifyTokenUser,
     userController.getDetailUserById
   );
-  router.put('/api/setDataUserSetting', userController.setDataUserSetting)
-
+  router.put("/api/setDataUserSetting", userController.setDataUserSetting);
 
   //===================API ALLCODE========================//
   router.post(
@@ -114,8 +113,45 @@ let initWebRoutes = (app) => {
 };
 
 //==================API POST==========================//
-router.post('/api/create-new-post', middlewareControllers.verifyTokenUser,postController.handleCreateNewPost)
-router.post('/api/create-reup-post', middlewareControllers.verifyTokenUser,postController.handleReupPost)
-router.put('/api/update-post', middlewareControllers.verifyTokenUser,postController.handleUpdatePost)
-router.get('/api/get-detail-post-by-id', postController.getDetailPostById)
+router.post(
+  "/api/create-new-post",
+  middlewareControllers.verifyTokenUser,
+  postController.handleCreateNewPost
+);
+router.post(
+  "/api/create-reup-post",
+  middlewareControllers.verifyTokenUser,
+  postController.handleReupPost
+);
+router.put(
+  "/api/update-post",
+  middlewareControllers.verifyTokenUser,
+  postController.handleUpdatePost
+);
+router.put(
+  "/api/active-post",
+  middlewareControllers.verifyTokenAdmin,
+  postController.handleActivePost
+);
+router.put(
+  "/api/ban-post",
+  middlewareControllers.verifyTokenAdmin,
+  postController.handleBanPost
+);
+router.put(
+  "/api/accept-post",
+  middlewareControllers.verifyTokenAdmin,
+  postController.handleAcceptPost
+);
+router.get("/api/get-detail-post-by-id", postController.getDetailPostById);
+router.get(
+  "/api/get-statistical-post",
+  middlewareControllers.verifyTokenUser,
+  postController.getStatisticalTypePost
+);
+router.get(
+  "/api/get-note-by-post",
+  middlewareControllers.verifyTokenUser,
+  postController.getListNoteByPost
+);
 module.exports = initWebRoutes;
