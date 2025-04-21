@@ -2,6 +2,8 @@ import express from "express";
 import userController from "../controllers/userController";
 import companyController from "../controllers/companyController";
 import middlewareControllers from "../middlewares/jwtVerify";
+import postController from '../controllers/postController';
+import cvController from '../controllers/cvController';
 let router = express.Router();
 
 let initWebRoutes = (app) => {
@@ -164,4 +166,8 @@ router.get(
   middlewareControllers.verifyTokenUser,
   postController.getListNoteByPost
 );
+//==================API CV==========================//
+router.post('/api/create-new-cv', middlewareControllers.verifyTokenUser,cvController.handleCreateNewCV)
+
+
 module.exports = initWebRoutes;
