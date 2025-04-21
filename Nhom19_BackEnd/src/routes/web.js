@@ -113,4 +113,9 @@ let initWebRoutes = (app) => {
   return app.use("/", router);
 };
 
+//==================API POST==========================//
+router.post('/api/create-new-post', middlewareControllers.verifyTokenUser,postController.handleCreateNewPost)
+router.post('/api/create-reup-post', middlewareControllers.verifyTokenUser,postController.handleReupPost)
+router.put('/api/update-post', middlewareControllers.verifyTokenUser,postController.handleUpdatePost)
+router.get('/api/get-detail-post-by-id', postController.getDetailPostById)
 module.exports = initWebRoutes;
