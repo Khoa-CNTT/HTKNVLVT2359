@@ -12,3 +12,7 @@ let handleCreateNewCV = async (req, res) => {
         })
     }
 }
+
+module.exports = {
+    handleCreateNewCV: handleCreateNewCV,
+}
