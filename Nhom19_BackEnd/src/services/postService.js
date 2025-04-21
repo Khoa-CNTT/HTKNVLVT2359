@@ -439,6 +439,264 @@ let handleAcceptPost = (data) => {
     }
   });
 };
+let getListPostByAdmin = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.limit || !data.offset || !data.companyId) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameters !",
+        });
+      } else {
+        let company = await db.Company.findOne({
+          where: { id: data.companyId },
+        });
+        if (!company) {
+          resolve({
+            errCode: 2,
+            errorMessage: "Không tồn tại công ty",
+          });
+        } else {
+          let listUserOfCompany = await db.User.findAll({
+            where: { companyId: company.id },
+            attributes: ["id"],
+          });
+          listUserOfCompany = listUserOfCompany.map((item) => {
+            return {
+              userId: item.id,
+            };
+          });
+          let objectFilter = {
+            where: {
+              [Op.and]: [{ [Op.or]: listUserOfCompany }],
+            },
+            order: [["updatedAt", "DESC"]],
+            limit: +data.limit,
+            offset: +data.offset,
+            attributes: {
+              exclude: ["detailPostId"],
+            },
+            nest: true,
+            raw: true,
+            include: [
+              {
+                model: db.DetailPost,
+                as: "postDetailData",
+                attributes: [
+                  "id",
+                  "name",
+                  "descriptionHTML",
+                  "descriptionMarkdown",
+                  "amount",
+                ],
+                include: [
+                  {
+                    model: db.Allcode,
+                    as: "jobTypePostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "workTypePostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "salaryTypePostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "jobLevelPostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "genderPostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "provincePostData",
+                    attributes: ["value", "code"],
+                  },
+                  {
+                    model: db.Allcode,
+                    as: "expTypePostData",
+                    attributes: ["value", "code"],
+                  },
+                ],
+              },
+              {
+                model: db.Allcode,
+                as: "statusPostData",
+                attributes: ["value", "code"],
+              },
+              {
+                model: db.User,
+                as: "userPostData",
+                attributes: {
+                  exclude: ["userId"],
+                },
+                include: [{ model: db.Company, as: "userCompanyData" }],
+              },
+            ],
+          };
+          if (data.censorCode) {
+            objectFilter.where = {
+              ...objectFilter.where,
+              statusCode: data.censorCode,
+            };
+          }
+          if (data.search) {
+            objectFilter.where = {
+              ...objectFilter.where,
+              [Op.or]: [
+                db.Sequelize.where(db.sequelize.col("postDetailData.name"), {
+                  [Op.like]: `%${data.search}%`,
+                }),
+                {
+                  id: {
+                    [Op.like]: `%${data.search}%`,
+                  },
+                },
+              ],
+            };
+          }
+          let post = await db.Post.findAndCountAll(objectFilter);
+          resolve({
+            errCode: 0,
+            data: post.rows,
+            count: post.count,
+          });
+        }
+      }
+    } catch (error) {
+      reject(error.message);
+    }
+  });
+};
+
+let getAllPostByAdmin = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.limit || !data.offset) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameters !",
+        });
+      } else {
+        let objectFilter = {
+          order: [["updatedAt", "DESC"]],
+          limit: +data.limit,
+          offset: +data.offset,
+          attributes: {
+            exclude: ["detailPostId"],
+          },
+          nest: true,
+          raw: true,
+          include: [
+            {
+              model: db.DetailPost,
+              as: "postDetailData",
+              attributes: [
+                "id",
+                "name",
+                "descriptionHTML",
+                "descriptionMarkdown",
+                "amount",
+              ],
+              include: [
+                {
+                  model: db.Allcode,
+                  as: "jobTypePostData",
+                  attributes: ["value", "code"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "workTypePostData",
+                  attributes: ["value", "code"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "salaryTypePostData",
+                  attributes: ["value", "code"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "jobLevelPostData",
+                  attributes: ["value", "code"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "genderPostData",
+                  attributes: ["value", "code"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "provincePostData",
+                  attributes: ["value", "code"],
+                },
+                {
+                  model: db.Allcode,
+                  as: "expTypePostData",
+                  attributes: ["value", "code"],
+                },
+              ],
+            },
+            {
+              model: db.Allcode,
+              as: "statusPostData",
+              attributes: ["value", "code"],
+            },
+            {
+              model: db.User,
+              as: "userPostData",
+              attributes: { exclude: ["userId"] },
+              include: [{ model: db.Company, as: "userCompanyData" }],
+            },
+          ],
+          order: [["updatedAt", "DESC"]],
+        };
+        // if (data.search) {
+        //     objectFilter.include[0].where = {name: {[Op.like]: `%${data.search}%`}}
+        // }
+        if (data.censorCode) {
+          objectFilter.where = { statusCode: data.censorCode };
+        }
+        if (data.search) {
+          objectFilter.where = {
+            ...objectFilter.where,
+            [Op.or]: [
+              db.Sequelize.where(db.sequelize.col("postDetailData.name"), {
+                [Op.like]: `%${data.search}%`,
+              }),
+              {
+                id: {
+                  [Op.like]: `%${data.search}%`,
+                },
+              },
+              db.Sequelize.where(
+                db.sequelize.col("userPostData.userCompanyData.name"),
+                {
+                  [Op.like]: `%${data.search}%`,
+                }
+              ),
+            ],
+          };
+        }
+        let post = await db.Post.findAndCountAll(objectFilter);
+        resolve({
+          errCode: 0,
+          data: post.rows,
+          count: post.count,
+        });
+      }
+    } catch (error) {
+      reject(error.message);
+    }
+  });
+};
 let getDetailPostById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -629,6 +887,8 @@ module.exports = {
   handleUpdatePost: handleUpdatePost,
   handleBanPost: handleBanPost,
   handleAcceptPost: handleAcceptPost,
+  getListPostByAdmin: getListPostByAdmin,
+  getAllPostByAdmin: getAllPostByAdmin,
   getDetailPostById: getDetailPostById,
   handleActivePost: handleActivePost,
   getStatisticalTypePost: getStatisticalTypePost,
