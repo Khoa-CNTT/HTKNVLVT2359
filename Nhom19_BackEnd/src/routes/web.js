@@ -168,6 +168,16 @@ router.get(
 );
 //==================API CV==========================//
 router.post('/api/create-new-cv', middlewareControllers.verifyTokenUser,cvController.handleCreateNewCV)
+   //==================API PACKAGE CV==========================//
+   router.get('/api/get-package-cv-by-id', middlewareControllers.verifyTokenUser,packageCvController.getPackageById)
+   router.get('/api/get-all-package-cv',middlewareControllers.verifyTokenUser,packageCvController.getAllPackage)
+   router.put('/api/set-active-package-cv', middlewareControllers.verifyTokenAdmin ,packageCvController.setActiveTypePackage)
+   router.post('/api/create-package-cv', middlewareControllers.verifyTokenAdmin ,packageCvController.creatNewPackageCv)
+   router.put('/api/update-package-cv',middlewareControllers.verifyTokenAdmin , packageCvController.updatePackageCv)
+   router.get('/api/get-statistical-package-cv',middlewareControllers.verifyTokenAdmin ,packageCvController.getStatisticalPackageCv)
+   router.get('/api/get-all-package-cv-select',middlewareControllers.verifyTokenUser,packageCvController.getAllToSelect)
+   router.get('/api/get-history-trade-cv',middlewareControllers.verifyTokenUser,packageCvController.getHistoryTrade)
+   router.get('/api/get-sum-by-year-cv',middlewareControllers.verifyTokenAdmin,packageCvController.getSumByYear)
 
 
 module.exports = initWebRoutes;
