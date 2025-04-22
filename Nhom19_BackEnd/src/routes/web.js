@@ -166,6 +166,52 @@ router.get(
   middlewareControllers.verifyTokenUser,
   postController.getListNoteByPost
 );
+//==================API PACKAGE==========================//
+router.get(
+  "/api/get-package-by-type",
+  middlewareControllers.verifyTokenUser,
+  packageController.getPackageByType
+);
+router.get(
+  "/api/get-package-by-id",
+  middlewareControllers.verifyTokenUser,
+  packageController.getPackageById
+);
+router.get(
+  "/api/get-all-package",
+  middlewareControllers.verifyTokenUser,
+  packageController.getAllPackage
+);
+router.put(
+  "/api/set-active-package-post",
+  middlewareControllers.verifyTokenAdmin,
+  packageController.setActiveTypePackage
+);
+router.post(
+  "/api/create-package-post",
+  middlewareControllers.verifyTokenAdmin,
+  packageController.creatNewPackagePost
+);
+router.put(
+  "/api/update-package-post",
+  middlewareControllers.verifyTokenAdmin,
+  packageController.updatePackagePost
+);
+router.get(
+  "/api/get-statistical-package",
+  middlewareControllers.verifyTokenAdmin,
+  packageController.getStatisticalPackage
+);
+router.get(
+  "/api/get-history-trade-post",
+  middlewareControllers.verifyTokenUser,
+  packageController.getHistoryTrade
+);
+router.get(
+  "/api/get-sum-by-year-post",
+  middlewareControllers.verifyTokenAdmin,
+  packageController.getSumByYear
+);
 //==================API CV==========================//
 router.post(
   "/api/create-new-cv",
