@@ -1,6 +1,13 @@
 import db from "../models/index";
-const { Op } = require("sequelize");
+const { Op , and } = require("sequelize");
+import paypal, { order } from 'paypal-rest-sdk'
 require('dotenv').config();
+
+paypal.configure({
+    'mode': 'sandbox',
+    'client_id': process.env.CLIENT_ID,
+    'client_secret': process.env.CLIENT_SECRET
+});
 
 
 

@@ -1,6 +1,14 @@
 import db from "../models/index";
 const { Op, and } = require("sequelize");
-require("dotenv").config();
+import paypal, { order } from 'paypal-rest-sdk'
+
+require('dotenv').config();
+paypal.configure({
+    'mode': 'sandbox',
+    'client_id': process.env.CLIENT_ID,
+    'client_secret': process.env.CLIENT_SECRET
+});
+
 let getAllPackage = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
