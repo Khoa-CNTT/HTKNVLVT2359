@@ -90,6 +90,32 @@ let getStatisticalPackage = async (req, res) => {
   }
 };
 
+let getPaymentLink = async (req, res) => {
+  try {
+      let data = await packageService.getPaymentLink(req.query);
+      return res.status(200).json(data);
+  } catch (error) {
+      console.log(error)
+      return res.status(200).json({
+          errCode: -1,
+          errMessage: 'Error from server'
+      })
+  }
+}
+
+let paymentOrderSuccess = async (req, res) => {
+  try {
+      let data = await packageService.paymentOrderSuccess(req.body);
+      return res.status(200).json(data);
+  } catch (error) {
+      console.log(error)
+      return res.status(200).json({
+          errCode: -1,
+          errMessage: 'Error from server'
+      })
+  }
+}
+
 let getHistoryTrade = async (req, res) => {
   try {
     let data = await packageService.getHistoryTrade(req.query);
@@ -117,13 +143,15 @@ let getSumByYear = async (req, res) => {
 };
 
 module.exports = {
-  getPackageByType: getPackageByType,
-  getAllPackage: getAllPackage,
-  setActiveTypePackage: setActiveTypePackage,
-  getPackageById: getPackageById,
-  creatNewPackagePost: creatNewPackagePost,
-  updatePackagePost: updatePackagePost,
-  getStatisticalPackage: getStatisticalPackage,
-  getHistoryTrade: getHistoryTrade,
-  getSumByYear: getSumByYear,
+  getPackageByType : getPackageByType,
+    getPaymentLink: getPaymentLink,
+    paymentOrderSuccess: paymentOrderSuccess,
+    getAllPackage: getAllPackage,
+    setActiveTypePackage: setActiveTypePackage,
+    getPackageById: getPackageById,
+    creatNewPackagePost: creatNewPackagePost,
+    updatePackagePost: updatePackagePost,
+    getStatisticalPackage: getStatisticalPackage,
+    getHistoryTrade: getHistoryTrade,
+    getSumByYear: getSumByYear
 };

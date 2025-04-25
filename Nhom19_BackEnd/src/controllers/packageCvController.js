@@ -52,6 +52,32 @@ let setActiveTypePackage = async (req, res) => {
     }
 }
 
+let getPaymentLink = async (req, res) => {
+    try {
+        let data = await packageService.getPaymentLink(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let paymentOrderSuccess = async (req, res) => {
+    try {
+        let data = await packageService.paymentOrderSuccess(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
 let creatNewPackageCv = async (req, res) => {
     try {
         let data = await packageService.creatNewPackageCv(req.body);
@@ -118,6 +144,8 @@ let getSumByYear = async (req, res) => {
 }
 
 module.exports = {
+    getPaymentLink: getPaymentLink,
+    paymentOrderSuccess: paymentOrderSuccess,
     getAllPackage: getAllPackage,
     setActiveTypePackage: setActiveTypePackage,
     getPackageById: getPackageById,

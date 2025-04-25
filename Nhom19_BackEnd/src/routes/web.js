@@ -178,9 +178,19 @@ router.get(
   packageController.getPackageById
 );
 router.get(
+  "/api/get-payment-link",
+  middlewareControllers.verifyTokenUser,
+  packageController.getPaymentLink
+);
+router.get(
   "/api/get-all-package",
   middlewareControllers.verifyTokenUser,
   packageController.getAllPackage
+);
+router.post(
+  "/api/payment-success",
+  middlewareControllers.verifyTokenUser,
+  packageController.paymentOrderSuccess
 );
 router.put(
   "/api/set-active-package-post",
@@ -247,9 +257,19 @@ router.get(
   packageCvController.getPackageById
 );
 router.get(
+  "/api/get-payment-cv-link",
+  middlewareControllers.verifyTokenUser,
+  packageCvController.getPaymentLink
+);
+router.get(
   "/api/get-all-package-cv",
   middlewareControllers.verifyTokenUser,
   packageCvController.getAllPackage
+);
+router.post(
+  "/api/payment-cv-success",
+  middlewareControllers.verifyTokenUser,
+  packageCvController.paymentOrderSuccess
 );
 router.put(
   "/api/set-active-package-cv",
