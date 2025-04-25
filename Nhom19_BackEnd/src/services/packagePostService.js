@@ -167,6 +167,144 @@ let creatNewPackagePost = (data) => {
   });
 };
 
+let getPaymentLink = (data) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!data.id || !data.amount) {
+              resolve({
+                  errCode: 1,
+                  errMessage: `Missing required parameters !`
+
+              })
+          }
+          else {
+              let infoItem = await db.PackagePost.findOne({
+                  where: { id: data.id }
+              })
+              let item = [{
+                  "name": `${infoItem.name}`,
+                  "sku": infoItem.id,
+                  "price": infoItem.price,
+                  "currency": "USD",
+                  "quantity": data.amount
+              }]
+
+              let create_payment_json = {
+                  "intent": "sale",
+                  "payer": {
+                      "payment_method": "paypal"
+                  },
+                  "redirect_urls": {
+                      "return_url": `${process.env.URL_REACT}/admin/payment/success`,
+                      "cancel_url": `${process.env.URL_REACT}/admin/payment/cancel`
+                  },
+                  "transactions": [{
+                      "item_list": {
+                          "items": item
+                      },
+                      "amount": {
+                          "currency": "USD",
+                          "total": +data.amount * infoItem.price
+                      },
+                      "description": "This is the payment description."
+                  }]
+              };
+
+              paypal.payment.create(create_payment_json, function (error, payment) {
+                  if (error) {
+                      resolve({
+                          errCode: -1,
+                          errMessage: error,
+                      })
+
+                  } else {
+                      resolve({
+                          errCode: 0,
+                          link: payment.links[1].href
+                      })
+
+                  }
+              });
+          }
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+let paymentOrderSuccess = (data) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!data.PayerID || !data.paymentId || !data.token) {
+              resolve({
+                  errCode: 1,
+                  errMessage: 'Missing required parameter !'
+              })
+          } else {
+              let infoItem = await db.PackagePost.findOne({
+                  where: { id: data.packageId }
+              })
+              let execute_payment_json = {
+                  "payer_id": data.PayerID,
+                  "transactions": [{
+                      "amount": {
+                          "currency": "USD",
+                          "total": +data.amount * infoItem.price
+                      }
+                  }]
+              };
+
+              let paymentId = data.paymentId;
+
+              paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
+                  if (error) {
+                      resolve({
+                          errCode: -1,
+                          errMessage: error
+                      })
+                  } else {
+                      let orderPackage = await db.OrderPackage.create({
+                          packagePostId: data.packageId,
+                          userId: data.userId,
+                          currentPrice: infoItem.price,
+                          amount: +data.amount
+                      })
+                      if (orderPackage) {
+                          let user = await db.User.findOne({
+                              where: { id: data.userId },
+                              attributes: {
+                                  exclude: ['userId']
+                              }
+                          })
+                          let company = await db.Company.findOne({
+                              where: { id: user.companyId },
+                              raw: false
+                          })
+                          if (company) {
+                              if (infoItem.isHot == 0) {
+                                  company.allowPost += +infoItem.value * +data.amount
+                              }
+                              else {
+                                  company.allowHotPost += +infoItem.value * +data.amount
+                              }
+                              await company.save({silent: true})
+
+                          }
+                      }
+                      resolve({
+                          errCode: 0,
+                          errMessage: 'Hệ thống đã ghi nhận lịch sử mua của bạn'
+                      })
+                  }
+              });
+          }
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+
 let updatePackagePost = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -418,13 +556,7 @@ let getSumByYear = (data) => {
   });
 };
 module.exports = {
-  getPackageByType,
-  getAllPackage,
-  setActiveTypePackage,
-  getPackageById,
-  creatNewPackagePost,
-  updatePackagePost,
-  getStatisticalPackage,
-  getHistoryTrade,
-  getSumByYear,
+  getPackageByType, getPaymentLink, paymentOrderSuccess, getAllPackage, setActiveTypePackage,
+    getPackageById, creatNewPackagePost, updatePackagePost, getStatisticalPackage, getHistoryTrade,
+    getSumByYear
 };
