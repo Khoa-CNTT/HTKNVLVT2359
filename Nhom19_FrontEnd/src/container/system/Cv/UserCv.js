@@ -1,8 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { getDetailCvService } from '../../../service/cvService';
-
-
 import { Link, useHistory } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 
