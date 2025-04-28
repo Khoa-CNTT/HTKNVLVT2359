@@ -117,6 +117,10 @@ const ManagePost = () => {
         }
     }, [search, censorCode]);
 
+    let handleOnChangeCensor = (value) => {
+        setCensorCode(value);
+    };
+
     let handleChangePage = async (number) => {
         setnumberPage(number.selected);
         let arrData = [];
@@ -142,13 +146,9 @@ const ManagePost = () => {
         }
     };
 
-    let handleOnChangeCensor = (value) => {
-        setCensorCode(value);
-    };
-
-    let handleBanPost = async (id, note) => {
-        let res = await banPostService({
-            postId: id,
+    let handleActivePost = async (id, note) => {
+        let res = await activePostService({
+            id: id,
             userId: user.id,
             note: note,
         });
@@ -179,10 +179,10 @@ const ManagePost = () => {
             toast.error(res.errMessage);
         }
     };
-
-    let handleActivePost = async (id, note) => {
-        let res = await activePostService({
-            id: id,
+    
+    let handleBanPost = async (id, note) => {
+        let res = await banPostService({
+            postId: id,
             userId: user.id,
             note: note,
         });
