@@ -24,9 +24,9 @@ let getAllListCvByPost = async (req, res) => {
     });
   }
 };
-let getDetailCvById = async (req, res) => {
+let getAllCvByUserId = async (req, res) => {
   try {
-    let data = await cvService.getDetailCvById(req.query);
+    let data = await cvService.getAllCvByUserId(req.query);
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -36,9 +36,9 @@ let getDetailCvById = async (req, res) => {
     });
   }
 };
-let getAllCvByUserId = async (req, res) => {
+let getDetailCvById = async (req, res) => {
   try {
-    let data = await cvService.getAllCvByUserId(req.query);
+    let data = await cvService.getDetailCvById(req.query);
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -60,7 +60,6 @@ let getStatisticalCv = async (req, res) => {
     });
   }
 };
-
 let fillterCVBySelection = async (req, res) => {
   try {
     let data = await cvService.fillterCVBySelection(req.query);
@@ -88,8 +87,8 @@ let checkSeeCandiate = async (req, res) => {
 module.exports = {
   handleCreateNewCV: handleCreateNewCV,
   getAllListCvByPost: getAllListCvByPost,
-  getDetailCvById: getDetailCvById,
   getAllCvByUserId: getAllCvByUserId,
+  getDetailCvById: getDetailCvById,
   getStatisticalCv: getStatisticalCv,
   fillterCVBySelection: fillterCVBySelection,
   checkSeeCandiate: checkSeeCandiate,
