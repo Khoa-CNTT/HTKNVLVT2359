@@ -12,11 +12,12 @@ import { toast } from "react-toastify";
 import CommonUtils from "../../../util/CommonUtils";
 import { Input } from "antd";
 import AddpackageCv from "./AddPackageCv";
+
 const ManagePackageCv = () => {
     const [dataPackagePost, setDataPackagePost] = useState([]);
     const [count, setCount] = useState("");
-    const [numberPage, setnumberPage] = useState("");
     const [search, setSearch] = useState("");
+    const [numberPage, setnumberPage] = useState("");
 
     useEffect(() => {
         try {
@@ -37,6 +38,23 @@ const ManagePackageCv = () => {
             console.log(error);
         }
     }, [search]);
+
+    const handleSearch = (value) => {
+        setSearch(value);
+    };
+
+    let handleChangePage = async (number) => {
+        setnumberPage(number.selected);
+        let arrData = await getAllPackageCv({
+            limit: PAGINATION.pagerow,
+            offset: number.selected * PAGINATION.pagerow,
+            search: CommonUtils.removeSpace(search),
+        });
+        if (arrData && arrData.errCode === 0) {
+            setDataPackagePost(arrData.data);
+        }
+    };
+
     let hanndleSetActivePackage = async (event, id, isActive) => {
         event.preventDefault();
         let res = await setActiveTypePackageCv({
@@ -56,20 +74,7 @@ const ManagePackageCv = () => {
             }
         } else toast.error(res.errMessage);
     };
-    let handleChangePage = async (number) => {
-        setnumberPage(number.selected);
-        let arrData = await getAllPackageCv({
-            limit: PAGINATION.pagerow,
-            offset: number.selected * PAGINATION.pagerow,
-            search: CommonUtils.removeSpace(search),
-        });
-        if (arrData && arrData.errCode === 0) {
-            setDataPackagePost(arrData.data);
-        }
-    };
-    const handleSearch = (value) => {
-        setSearch(value);
-    };
+
     return (
         <div>
             <div className="col-12 grid-margin">
