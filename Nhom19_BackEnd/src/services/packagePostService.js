@@ -1,13 +1,14 @@
 import db from "../models/index";
 const { Op, and } = require("sequelize");
-import paypal, { order } from "paypal-rest-sdk";
-require("dotenv").config();
+import paypal, { order } from 'paypal-rest-sdk'
 
+require('dotenv').config();
 paypal.configure({
-  mode: "sandbox",
-  client_id: process.env.CLIENT_ID,
-  client_secret: process.env.CLIENT_SECRET,
+    'mode': 'sandbox',
+    'client_id': process.env.CLIENT_ID,
+    'client_secret': process.env.CLIENT_SECRET
 });
+
 let getAllPackage = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -24,11 +25,11 @@ let getAllPackage = (data) => {
         if (data.search) {
           objectFilter.where = { name: { [Op.like]: `%${data.search}%` } };
         }
-        let packageCvs = await db.PackageCv.findAndCountAll(objectFilter);
+        let packagePosts = await db.PackagePost.findAndCountAll(objectFilter);
         resolve({
           errCode: 0,
-          data: packageCvs.rows,
-          count: packageCvs.count,
+          data: packagePosts.rows,
+          count: packagePosts.count,
         });
       }
     } catch (error) {
@@ -36,19 +37,30 @@ let getAllPackage = (data) => {
     }
   });
 };
-let getAllToSelect = (data) => {
+
+let getPackageByType = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let packageCvs = await db.PackageCv.findAll();
-      resolve({
-        errCode: 0,
-        data: packageCvs,
-      });
+      if (data.isHot === "") {
+        resolve({
+          errCode: 1,
+          errMessage: `Missing required parameters !`,
+        });
+      } else {
+        let packagePost = await db.PackagePost.findAll({
+          where: { isHot: data.isHot },
+        });
+        resolve({
+          errCode: 0,
+          data: packagePost,
+        });
+      }
     } catch (error) {
       reject(error);
     }
   });
 };
+
 let getPackageById = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -58,13 +70,13 @@ let getPackageById = (data) => {
           errMessage: `Missing required parameters !`,
         });
       } else {
-        let packageCvs = await db.PackageCv.findOne({
+        let packagePost = await db.PackagePost.findOne({
           where: { id: data.id },
         });
-        if (packageCvs) {
+        if (packagePost) {
           resolve({
             errCode: 0,
-            data: packageCvs,
+            data: packagePost,
           });
         } else {
           resolve({
@@ -87,18 +99,18 @@ let setActiveTypePackage = (data) => {
           errMessage: `Missing required parameters !`,
         });
       } else {
-        let packageCv = await db.PackageCv.findOne({
+        let packagePost = await db.PackagePost.findOne({
           where: { id: data.id },
           raw: false,
         });
-        if (!packageCv) {
+        if (!packagePost) {
           resolve({
             errCode: 2,
             errMessage: `Gói sản phẩm không tồn tại`,
           });
         } else {
-          packageCv.isActive = data.isActive;
-          await packageCv.save();
+          packagePost.isActive = data.isActive;
+          await packagePost.save();
           resolve({
             errCode: 0,
             errMessage:
@@ -113,22 +125,24 @@ let setActiveTypePackage = (data) => {
     }
   });
 };
-let creatNewPackageCv = (data) => {
+
+let creatNewPackagePost = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.name || !data.price || !data.value) {
+      if (!data.name || !data.price || !data.value || data.isHot === "") {
         resolve({
           errCode: 1,
           errMessage: "Missing required parameters !",
         });
       } else {
-        let packageCv = await db.PackageCv.create({
+        let packagePost = await db.PackagePost.create({
           name: data.name,
           value: data.value,
+          isHot: data.isHot,
           price: data.price,
           isActive: 1,
         });
-        if (packageCv) {
+        if (packagePost) {
           resolve({
             errCode: 0,
             errMessage: "Tạo gói sản phẩm thành công",
@@ -152,24 +166,170 @@ let creatNewPackageCv = (data) => {
     }
   });
 };
-let updatePackageCv = (data) => {
+
+let getPaymentLink = (data) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!data.id || !data.amount) {
+              resolve({
+                  errCode: 1,
+                  errMessage: `Missing required parameters !`
+
+              })
+          }
+          else {
+              let infoItem = await db.PackagePost.findOne({
+                  where: { id: data.id }
+              })
+              let item = [{
+                  "name": `${infoItem.name}`,
+                  "sku": infoItem.id,
+                  "price": infoItem.price,
+                  "currency": "USD",
+                  "quantity": data.amount
+              }]
+
+              let create_payment_json = {
+                  "intent": "sale",
+                  "payer": {
+                      "payment_method": "paypal"
+                  },
+                  "redirect_urls": {
+                      "return_url": `${process.env.URL_REACT}/admin/payment/success`,
+                      "cancel_url": `${process.env.URL_REACT}/admin/payment/cancel`
+                  },
+                  "transactions": [{
+                      "item_list": {
+                          "items": item
+                      },
+                      "amount": {
+                          "currency": "USD",
+                          "total": +data.amount * infoItem.price
+                      },
+                      "description": "This is the payment description."
+                  }]
+              };
+
+              paypal.payment.create(create_payment_json, function (error, payment) {
+                  if (error) {
+                      resolve({
+                          errCode: -1,
+                          errMessage: error,
+                      })
+
+                  } else {
+                      resolve({
+                          errCode: 0,
+                          link: payment.links[1].href
+                      })
+
+                  }
+              });
+          }
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+let paymentOrderSuccess = (data) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          if (!data.PayerID || !data.paymentId || !data.token) {
+              resolve({
+                  errCode: 1,
+                  errMessage: 'Missing required parameter !'
+              })
+          } else {
+              let infoItem = await db.PackagePost.findOne({
+                  where: { id: data.packageId }
+              })
+              let execute_payment_json = {
+                  "payer_id": data.PayerID,
+                  "transactions": [{
+                      "amount": {
+                          "currency": "USD",
+                          "total": +data.amount * infoItem.price
+                      }
+                  }]
+              };
+
+              let paymentId = data.paymentId;
+
+              paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
+                  if (error) {
+                      resolve({
+                          errCode: -1,
+                          errMessage: error
+                      })
+                  } else {
+                      let orderPackage = await db.OrderPackage.create({
+                          packagePostId: data.packageId,
+                          userId: data.userId,
+                          currentPrice: infoItem.price,
+                          amount: +data.amount
+                      })
+                      if (orderPackage) {
+                          let user = await db.User.findOne({
+                              where: { id: data.userId },
+                              attributes: {
+                                  exclude: ['userId']
+                              }
+                          })
+                          let company = await db.Company.findOne({
+                              where: { id: user.companyId },
+                              raw: false
+                          })
+                          if (company) {
+                              if (infoItem.isHot == 0) {
+                                  company.allowPost += +infoItem.value * +data.amount
+                              }
+                              else {
+                                  company.allowHotPost += +infoItem.value * +data.amount
+                              }
+                              await company.save({silent: true})
+
+                          }
+                      }
+                      resolve({
+                          errCode: 0,
+                          errMessage: 'Hệ thống đã ghi nhận lịch sử mua của bạn'
+                      })
+                  }
+              });
+          }
+      } catch (error) {
+          reject(error)
+      }
+  })
+}
+
+
+let updatePackagePost = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.name || !data.price || !data.value || !data.id) {
+      if (
+        !data.name ||
+        !data.price ||
+        !data.value ||
+        data.isHot === "" ||
+        !data.id
+      ) {
         resolve({
           errCode: 1,
           errMessage: "Missing required parameters !",
         });
       } else {
-        let packageCv = await db.PackageCv.findOne({
+        let packagePost = await db.PackagePost.findOne({
           where: { id: data.id },
           raw: false,
         });
-        if (packageCv) {
-          packageCv.name = data.name;
-          packageCv.price = data.price;
-          packageCv.value = data.value;
-          await packageCv.save();
+        if (packagePost) {
+          packagePost.name = data.name;
+          packagePost.price = data.price;
+          packagePost.value = data.value;
+          packagePost.isHot = data.isHot;
+          await packagePost.save();
           resolve({
             errCode: 0,
             errMessage: "Cập nhật thành công",
@@ -193,6 +353,7 @@ let updatePackageCv = (data) => {
     }
   });
 };
+
 let getStatisticalPackage = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -207,8 +368,10 @@ let getStatisticalPackage = (data) => {
           filterListPackage.limit = +data.limit;
           filterListPackage.offset = +data.offset;
         }
-        let listPackage = await db.PackageCv.findAndCountAll(filterListPackage);
-        let listOrderPackage = await db.OrderPackageCV.findAll({
+        let listPackage = await db.PackagePost.findAndCountAll(
+          filterListPackage
+        );
+        let listOrderPackage = await db.OrderPackage.findAll({
           where: {
             createdAt: {
               [Op.and]: [
@@ -218,38 +381,39 @@ let getStatisticalPackage = (data) => {
             },
           },
           attributes: [
-            "packageCvId",
+            "packagePostId",
             [db.sequelize.literal("SUM(amount)"), "count"],
             [db.sequelize.literal("SUM(currentPrice * amount)"), "total"],
           ],
           order: [[db.Sequelize.literal("total"), "DESC"]],
-          group: ["packageCvId"],
+          group: ["packagePostId"],
           nest: true,
         });
+        console.log("list : ", listOrderPackage);
         const sum = listOrderPackage.reduce(
           (previousValue, currentValue) => previousValue + currentValue.total,
           0
         );
-        listPackage.rows = listPackage.rows.map((packageCv) => {
+        listPackage.rows = listPackage.rows.map((packagePost) => {
           let count = 1;
           let length = listOrderPackage.length;
           if (length == 0) {
             return {
-              ...packageCv,
+              ...packagePost,
               count: 0,
               total: 0,
             };
           }
           for (let order of listOrderPackage) {
-            if (order.packageCvId == packageCv.id) {
+            if (order.packagePostId == packagePost.id) {
               return {
-                ...packageCv,
+                ...packagePost,
                 count: order.count,
                 total: order.total,
               };
             } else if (count == length) {
               return {
-                ...packageCv,
+                ...packagePost,
                 total: 0,
                 count: 0,
               };
@@ -269,146 +433,7 @@ let getStatisticalPackage = (data) => {
     }
   });
 };
-let getPaymentLink = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!data.id || !data.amount) {
-        resolve({
-          errCode: 1,
-          errMessage: `Missing required parameters !`,
-        });
-      } else {
-        let infoItem = await db.PackageCv.findOne({
-          where: { id: data.id },
-        });
-        let item = [
-          {
-            name: `${infoItem.name}`,
-            sku: infoItem.id,
-            price: infoItem.price,
-            currency: "USD",
-            quantity: data.amount,
-          },
-        ];
 
-        let create_payment_json = {
-          intent: "sale",
-          payer: {
-            payment_method: "paypal",
-          },
-          redirect_urls: {
-            return_url: `${process.env.URL_REACT}/admin/paymentCv/success`,
-            cancel_url: `${process.env.URL_REACT}/admin/paymentCv/cancel`,
-          },
-          transactions: [
-            {
-              item_list: {
-                items: item,
-              },
-              amount: {
-                currency: "USD",
-                total: +data.amount * infoItem.price,
-              },
-              description: "This is the payment description.",
-            },
-          ],
-        };
-
-        paypal.payment.create(create_payment_json, function (error, payment) {
-          if (error) {
-            resolve({
-              errCode: -1,
-              errMessage: error,
-            });
-          } else {
-            resolve({
-              errCode: 0,
-              link: payment.links[1].href,
-            });
-          }
-        });
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-let paymentOrderSuccess = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (
-        !data.PayerID ||
-        !data.paymentId ||
-        !data.token ||
-        !data.packageCvId
-      ) {
-        resolve({
-          errCode: 1,
-          errMessage: "Missing required parameter !",
-        });
-      } else {
-        let infoItem = await db.PackageCv.findOne({
-          where: { id: data.packageCvId },
-        });
-        let execute_payment_json = {
-          payer_id: data.PayerID,
-          transactions: [
-            {
-              amount: {
-                currency: "USD",
-                total: +data.amount * infoItem.price,
-              },
-            },
-          ],
-        };
-
-        let paymentId = data.paymentId;
-
-        paypal.payment.execute(
-          paymentId,
-          execute_payment_json,
-          async function (error, payment) {
-            if (error) {
-              resolve({
-                errCode: -1,
-                errMessage: error,
-              });
-            } else {
-              let OrderPackageCV = await db.OrderPackageCV.create({
-                packageCvId: data.packageCvId,
-                userId: data.userId,
-                currentPrice: infoItem.price,
-                amount: +data.amount,
-              });
-              if (OrderPackageCV) {
-                let user = await db.User.findOne({
-                  where: { id: data.userId },
-                  attributes: {
-                    exclude: ["userId"],
-                  },
-                });
-                let company = await db.Company.findOne({
-                  where: { id: user.companyId },
-                  raw: false,
-                });
-                if (company) {
-                  company.allowCv += +infoItem.value * +data.amount;
-                  company.save({ silent: true });
-                }
-              }
-              resolve({
-                errCode: 0,
-                errMessage: "Hệ thống đã ghi nhận lịch sử mua của bạn",
-              });
-            }
-          }
-        );
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
 let getHistoryTrade = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -437,6 +462,9 @@ let getHistoryTrade = (data) => {
             };
           });
           let objectFilter = {
+            attributes: {
+              exclude: ["packageCvId"],
+            },
             where: {
               [Op.and]: [{ [Op.or]: listUserOfCompany }],
             },
@@ -446,12 +474,12 @@ let getHistoryTrade = (data) => {
             include: [
               {
                 model: db.User,
-                as: "userOrderCvData",
+                as: "userOrderData",
                 attributes: {
                   exclude: ["userId"],
                 },
               },
-              { model: db.PackageCv, as: "packageOrderCvData" },
+              { model: db.PackagePost, as: "packageOrderData" },
             ],
           };
 
@@ -475,7 +503,7 @@ let getHistoryTrade = (data) => {
             };
           }
 
-          let res = await db.OrderPackageCV.findAndCountAll(objectFilter);
+          let res = await db.OrderPackage.findAndCountAll(objectFilter);
 
           resolve({
             errCode: 0,
@@ -485,10 +513,11 @@ let getHistoryTrade = (data) => {
         }
       }
     } catch (error) {
-      reject(error.message);
+      reject(error);
     }
   });
 };
+
 let getSumByYear = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -514,7 +543,7 @@ let getSumByYear = (data) => {
           group: db.sequelize.fn("MONTH", db.sequelize.col("createdAt")),
         };
 
-        let res = await db.OrderPackageCV.findAll(objectFilter);
+        let res = await db.OrderPackage.findAll(objectFilter);
 
         resolve({
           errCode: 0,
@@ -527,15 +556,7 @@ let getSumByYear = (data) => {
   });
 };
 module.exports = {
-  getAllPackage,
-  getAllToSelect,
-  setActiveTypePackage,
-  getPackageById,
-  creatNewPackageCv,
-  updatePackageCv,
-  getStatisticalPackage,
-  getPaymentLink,
-  paymentOrderSuccess,
-  getHistoryTrade,
-  getSumByYear,
+  getPackageByType, getPaymentLink, paymentOrderSuccess, getAllPackage, setActiveTypePackage,
+    getPackageById, creatNewPackagePost, updatePackagePost, getStatisticalPackage, getHistoryTrade,
+    getSumByYear
 };

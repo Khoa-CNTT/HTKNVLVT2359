@@ -2,8 +2,8 @@ import express from "express";
 import userController from "../controllers/userController";
 import companyController from "../controllers/companyController";
 import middlewareControllers from "../middlewares/jwtVerify";
-import postController from '../controllers/postController';
-import cvController from '../controllers/cvController';
+import postController from "../controllers/postController";
+import cvController from "../controllers/cvController";
 let router = express.Router();
 
 let initWebRoutes = (app) => {
@@ -166,18 +166,145 @@ router.get(
   middlewareControllers.verifyTokenUser,
   postController.getListNoteByPost
 );
+//==================API PACKAGE==========================//
+router.get(
+  "/api/get-package-by-type",
+  middlewareControllers.verifyTokenUser,
+  packageController.getPackageByType
+);
+router.get(
+  "/api/get-package-by-id",
+  middlewareControllers.verifyTokenUser,
+  packageController.getPackageById
+);
+router.get(
+  "/api/get-payment-link",
+  middlewareControllers.verifyTokenUser,
+  packageController.getPaymentLink
+);
+router.get(
+  "/api/get-all-package",
+  middlewareControllers.verifyTokenUser,
+  packageController.getAllPackage
+);
+router.post(
+  "/api/payment-success",
+  middlewareControllers.verifyTokenUser,
+  packageController.paymentOrderSuccess
+);
+router.put(
+  "/api/set-active-package-post",
+  middlewareControllers.verifyTokenAdmin,
+  packageController.setActiveTypePackage
+);
+router.post(
+  "/api/create-package-post",
+  middlewareControllers.verifyTokenAdmin,
+  packageController.creatNewPackagePost
+);
+router.put(
+  "/api/update-package-post",
+  middlewareControllers.verifyTokenAdmin,
+  packageController.updatePackagePost
+);
+router.get(
+  "/api/get-statistical-package",
+  middlewareControllers.verifyTokenAdmin,
+  packageController.getStatisticalPackage
+);
+router.get(
+  "/api/get-history-trade-post",
+  middlewareControllers.verifyTokenUser,
+  packageController.getHistoryTrade
+);
+router.get(
+  "/api/get-sum-by-year-post",
+  middlewareControllers.verifyTokenAdmin,
+  packageController.getSumByYear
+);
 //==================API CV==========================//
-router.post('/api/create-new-cv', middlewareControllers.verifyTokenUser,cvController.handleCreateNewCV)
-   //==================API PACKAGE CV==========================//
-   router.get('/api/get-package-cv-by-id', middlewareControllers.verifyTokenUser,packageCvController.getPackageById)
-   router.get('/api/get-all-package-cv',middlewareControllers.verifyTokenUser,packageCvController.getAllPackage)
-   router.put('/api/set-active-package-cv', middlewareControllers.verifyTokenAdmin ,packageCvController.setActiveTypePackage)
-   router.post('/api/create-package-cv', middlewareControllers.verifyTokenAdmin ,packageCvController.creatNewPackageCv)
-   router.put('/api/update-package-cv',middlewareControllers.verifyTokenAdmin , packageCvController.updatePackageCv)
-   router.get('/api/get-statistical-package-cv',middlewareControllers.verifyTokenAdmin ,packageCvController.getStatisticalPackageCv)
-   router.get('/api/get-all-package-cv-select',middlewareControllers.verifyTokenUser,packageCvController.getAllToSelect)
-   router.get('/api/get-history-trade-cv',middlewareControllers.verifyTokenUser,packageCvController.getHistoryTrade)
-   router.get('/api/get-sum-by-year-cv',middlewareControllers.verifyTokenAdmin,packageCvController.getSumByYear)
-
+router.post(
+  "/api/create-new-cv",
+  middlewareControllers.verifyTokenUser,
+  cvController.handleCreateNewCV
+);
+router.get("/api/get-all-list-cv-by-post", cvController.getAllListCvByPost);
+router.get(
+  "/api/get-detail-cv-by-id",
+  middlewareControllers.verifyTokenUser,
+  cvController.getDetailCvById
+);
+router.get(
+  "/api/get-all-cv-by-userId",
+  middlewareControllers.verifyTokenUser,
+  cvController.getAllCvByUserId
+);
+router.get(
+  "/api/get-statistical-cv",
+  middlewareControllers.verifyTokenUser,
+  cvController.getStatisticalCv
+);
+router.get("/api/fillter-cv-by-selection", cvController.fillterCVBySelection);
+router.get(
+  "/api/check-see-candiate",
+  middlewareControllers.verifyTokenUser,
+  cvController.checkSeeCandiate
+);
+//==================API PACKAGE CV==========================//
+router.get(
+  "/api/get-package-cv-by-id",
+  middlewareControllers.verifyTokenUser,
+  packageCvController.getPackageById
+);
+router.get(
+  "/api/get-payment-cv-link",
+  middlewareControllers.verifyTokenUser,
+  packageCvController.getPaymentLink
+);
+router.get(
+  "/api/get-all-package-cv",
+  middlewareControllers.verifyTokenUser,
+  packageCvController.getAllPackage
+);
+router.post(
+  "/api/payment-cv-success",
+  middlewareControllers.verifyTokenUser,
+  packageCvController.paymentOrderSuccess
+);
+router.put(
+  "/api/set-active-package-cv",
+  middlewareControllers.verifyTokenAdmin,
+  packageCvController.setActiveTypePackage
+);
+router.post(
+  "/api/create-package-cv",
+  middlewareControllers.verifyTokenAdmin,
+  packageCvController.creatNewPackageCv
+);
+router.put(
+  "/api/update-package-cv",
+  middlewareControllers.verifyTokenAdmin,
+  packageCvController.updatePackageCv
+);
+router.get(
+  "/api/get-statistical-package-cv",
+  middlewareControllers.verifyTokenAdmin,
+  packageCvController.getStatisticalPackageCv
+);
+router.get(
+  "/api/get-all-package-cv-select",
+  middlewareControllers.verifyTokenUser,
+  packageCvController.getAllToSelect
+);
+router.get(
+  "/api/get-history-trade-cv",
+  middlewareControllers.verifyTokenUser,
+  packageCvController.getHistoryTrade
+);
+router.get(
+  "/api/get-sum-by-year-cv",
+  middlewareControllers.verifyTokenAdmin,
+  packageCvController.getSumByYear
+);
 
 module.exports = initWebRoutes;
