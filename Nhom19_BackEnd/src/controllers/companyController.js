@@ -13,6 +13,19 @@ let handleCreateNewCompany = async (req, res) => {
   }
 };
 
+let handleUnBanCompany = async (req, res) => {
+  try {
+    let data = await companyService.handleUnBanCompany(req.body.id);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
 let handleUpdateCompany = async (req, res) => {
   try {
     let data = await companyService.handleUpdateCompany(req.body);
@@ -39,9 +52,11 @@ let handleBanCompany = async (req, res) => {
   }
 };
 
-let handleUnBanCompany = async (req, res) => {
+
+
+let handleAddUserCompany = async (req, res) => {
   try {
-    let data = await companyService.handleUnBanCompany(req.body.id);
+    let data = await companyService.handleAddUserCompany(req.body);
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -51,10 +66,9 @@ let handleUnBanCompany = async (req, res) => {
     });
   }
 };
-
-let handleAddUserCompany = async (req, res) => {
+let getAllCompanyByAdmin = async (req, res) => {
   try {
-    let data = await companyService.handleAddUserCompany(req.body);
+    let data = await companyService.getAllCompanyByAdmin(req.query);
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -77,18 +91,7 @@ let handleQuitCompany = async (req, res) => {
   }
 };
 
-let getAllCompanyByAdmin = async (req, res) => {
-  try {
-    let data = await companyService.getAllCompanyByAdmin(req.query);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.log(error);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
+
 
 let handleAccecptCompany = async (req, res) => {
   try {
@@ -128,9 +131,11 @@ let getDetailCompanyById = async (req, res) => {
   }
 };
 
-let getDetailCompanyByUserId = async (req, res) => {
+
+
+let getAllUserByCompanyId = async (req, res) => {
   try {
-    let data = await companyService.getDetailCompanyByUserId(req.query);
+    let data = await companyService.getAllUserByCompanyId(req.query);
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -141,9 +146,9 @@ let getDetailCompanyByUserId = async (req, res) => {
   }
 };
 
-let getAllUserByCompanyId = async (req, res) => {
+let getDetailCompanyByUserId = async (req, res) => {
   try {
-    let data = await companyService.getAllUserByCompanyId(req.query);
+    let data = await companyService.getDetailCompanyByUserId(req.query);
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
