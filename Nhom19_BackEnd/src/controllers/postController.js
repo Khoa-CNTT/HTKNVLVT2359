@@ -12,18 +12,6 @@ let handleCreateNewPost = async (req, res) => {
     });
   }
 };
-let handleReupPost = async (req, res) => {
-  try {
-    let data = await postService.handleReupPost(req.body);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.log(error);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
 let handleUpdatePost = async (req, res) => {
   try {
     let data = await postService.handleUpdatePost(req.body);
@@ -36,9 +24,9 @@ let handleUpdatePost = async (req, res) => {
     });
   }
 };
-let handleBanPost = async (req, res) => {
+let handleAcceptPost = async (req, res) => {
   try {
-    let data = await postService.handleBanPost(req.body);
+    let data = await postService.handleAcceptPost(req.body);
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -48,10 +36,21 @@ let handleBanPost = async (req, res) => {
     });
   }
 };
-
-let handleAcceptPost = async (req, res) => {
+let handleReupPost = async (req, res) => {
   try {
-    let data = await postService.handleAcceptPost(req.body);
+    let data = await postService.handleReupPost(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+let handleBanPost = async (req, res) => {
+  try {
+    let data = await postService.handleBanPost(req.body);
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -138,12 +137,12 @@ let getListNoteByPost = async (req, res) => {
 module.exports = {
   handleCreateNewPost: handleCreateNewPost,
   handleUpdatePost: handleUpdatePost,
+  handleAcceptPost: handleAcceptPost,
   handleBanPost: handleBanPost,
   getListPostByAdmin: getListPostByAdmin,
   getAllPostByAdmin: getAllPostByAdmin,
   getDetailPostById: getDetailPostById,
   handleActivePost: handleActivePost,
-  handleAcceptPost: handleAcceptPost,
   getStatisticalTypePost: getStatisticalTypePost,
   getListNoteByPost: getListNoteByPost,
   handleReupPost: handleReupPost,

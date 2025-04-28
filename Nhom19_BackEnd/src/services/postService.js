@@ -106,86 +106,6 @@ let handleCreateNewPost = (data) => {
     }
   });
 };
-let handleReupPost = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!data.userId || !data.postId || !data.timeEnd) {
-        resolve({
-          errCode: 1,
-          errMessage: "Missing required parameters !",
-        });
-      } else {
-        let user = await db.User.findOne({
-          where: { id: data.userId },
-          attributes: {
-            exclude: ["userId"],
-          },
-        });
-        let company = await db.Company.findOne({
-          where: { id: user.companyId },
-          raw: false,
-        });
-        if (!company) {
-          resolve({
-            errCode: 2,
-            errMessage: "Người dùng không thuộc công ty",
-          });
-          return;
-        } else {
-          let post = await db.Post.findOne({
-            where: { id: data.postId },
-          });
-          if (!post) {
-            resolve({
-              errCode: 2,
-              errMessage: "Bài viết không tồn tại",
-            });
-            return;
-          } else {
-            if (post.isHot == "1") {
-              if (company.allowHotPost > 0) {
-                company.allowHotPost -= 1;
-                await company.save();
-              } else {
-                resolve({
-                  errCode: 2,
-                  errMessage: "Công ty bạn đã hết số lần đăng bài viết nổi bật",
-                });
-                return;
-              }
-            } else {
-              if (company.allowPost > 0) {
-                company.allowPost -= 1;
-                await company.save();
-              } else {
-                resolve({
-                  errCode: 2,
-                  errMessage:
-                    "Công ty bạn đã hết số lần đăng bài viết bình thường",
-                });
-                return;
-              }
-            }
-            await db.Post.create({
-              statusCode: "PS3",
-              timeEnd: data.timeEnd,
-              userId: data.userId,
-              isHot: post.isHot,
-              detailPostId: post.detailPostId,
-            });
-            resolve({
-              errCode: 0,
-              errMessage:
-                "Tạo bài tuyển dụng thành công hãy chờ quản trị viên duyệt",
-            });
-          }
-        }
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
 let handleUpdatePost = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -271,6 +191,147 @@ let handleUpdatePost = (data) => {
           resolve({
             errCode: 2,
             errMessage: "Bài đăng không tồn tại !",
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let handleReupPost = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.userId || !data.postId || !data.timeEnd) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameters !",
+        });
+      } else {
+        let user = await db.User.findOne({
+          where: { id: data.userId },
+          attributes: {
+            exclude: ["userId"],
+          },
+        });
+        let company = await db.Company.findOne({
+          where: { id: user.companyId },
+          raw: false,
+        });
+        if (!company) {
+          resolve({
+            errCode: 2,
+            errMessage: "Người dùng không thuộc công ty",
+          });
+          return;
+        } else {
+          let post = await db.Post.findOne({
+            where: { id: data.postId },
+          });
+          if (!post) {
+            resolve({
+              errCode: 2,
+              errMessage: "Bài viết không tồn tại",
+            });
+            return;
+          } else {
+            if (post.isHot == "1") {
+              if (company.allowHotPost > 0) {
+                company.allowHotPost -= 1;
+                await company.save();
+              } else {
+                resolve({
+                  errCode: 2,
+                  errMessage: "Công ty bạn đã hết số lần đăng bài viết nổi bật",
+                });
+                return;
+              }
+            } else {
+              if (company.allowPost > 0) {
+                company.allowPost -= 1;
+                await company.save();
+              } else {
+                resolve({
+                  errCode: 2,
+                  errMessage:
+                    "Công ty bạn đã hết số lần đăng bài viết bình thường",
+                });
+                return;
+              }
+            }
+            await db.Post.create({
+              statusCode: "PS3",
+              timeEnd: data.timeEnd,
+              userId: data.userId,
+              isHot: post.isHot,
+              detailPostId: post.detailPostId,
+            });
+            resolve({
+              errCode: 0,
+              errMessage:
+                "Tạo bài tuyển dụng thành công hãy chờ quản trị viên duyệt",
+            });
+          }
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let handleAcceptPost = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.id || !data.statusCode) {
+        resolve({
+          errCode: 1,
+          errMessage: `Missing required parameters !`,
+        });
+      } else {
+        let foundPost = await db.Post.findOne({
+          where: { id: data.id },
+          raw: false,
+        });
+
+        console.log("foundPost : ", foundPost);
+
+        let postName = await db.DetailPost.findOne({
+          where: { id: foundPost.detailPostId },
+          attributes: {
+            exclude: ["statusCode"],
+          },
+        });
+
+        if (foundPost) {
+          foundPost.statusCode = data.statusCode;
+          if (data.statusCode == "PS1") {
+            foundPost.timePost = new Date().getTime();
+          }
+          await foundPost.save();
+          let note =
+            data.statusCode == "PS1" ? "Đã duyệt bài thành công" : data.note;
+          await db.Note.create({
+            postId: foundPost.id,
+            note: note,
+            userId: data.userId,
+          });
+          let user = await db.User.findOne({
+            where: { id: foundPost.userId },
+            attributes: {
+              exclude: ["userId"],
+            },
+          });
+          resolve({
+            errCode: 0,
+            errMessage:
+              data.statusCode == "PS1"
+                ? "Duyệt bài thành công"
+                : "Đã từ chối bài thành công",
+          });
+        } else {
+          resolve({
+            errCode: 2,
+            errMessage: "Không tồn tại bài viết",
           });
         }
       }
@@ -365,67 +426,6 @@ let handleActivePost = (data) => {
           resolve({
             errCode: 0,
             errMessage: "Đã mở lại trạng thái chờ duyệt",
-          });
-        } else {
-          resolve({
-            errCode: 2,
-            errMessage: "Không tồn tại bài viết",
-          });
-        }
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-let handleAcceptPost = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!data.id || !data.statusCode) {
-        resolve({
-          errCode: 1,
-          errMessage: `Missing required parameters !`,
-        });
-      } else {
-        let foundPost = await db.Post.findOne({
-          where: { id: data.id },
-          raw: false,
-        });
-
-        console.log("foundPost : ", foundPost);
-
-        let postName = await db.DetailPost.findOne({
-          where: { id: foundPost.detailPostId },
-          attributes: {
-            exclude: ["statusCode"],
-          },
-        });
-
-        if (foundPost) {
-          foundPost.statusCode = data.statusCode;
-          if (data.statusCode == "PS1") {
-            foundPost.timePost = new Date().getTime();
-          }
-          await foundPost.save();
-          let note =
-            data.statusCode == "PS1" ? "Đã duyệt bài thành công" : data.note;
-          await db.Note.create({
-            postId: foundPost.id,
-            note: note,
-            userId: data.userId,
-          });
-          let user = await db.User.findOne({
-            where: { id: foundPost.userId },
-            attributes: {
-              exclude: ["userId"],
-            },
-          });
-          resolve({
-            errCode: 0,
-            errMessage:
-              data.statusCode == "PS1"
-                ? "Duyệt bài thành công"
-                : "Đã từ chối bài thành công",
           });
         } else {
           resolve({
@@ -576,7 +576,6 @@ let getListPostByAdmin = (data) => {
     }
   });
 };
-
 let getAllPostByAdmin = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -881,10 +880,10 @@ let getListNoteByPost = (data) => {
     }
   });
 };
-
 module.exports = {
   handleCreateNewPost: handleCreateNewPost,
   handleUpdatePost: handleUpdatePost,
+  handleReupPost: handleReupPost,
   handleBanPost: handleBanPost,
   handleAcceptPost: handleAcceptPost,
   getListPostByAdmin: getListPostByAdmin,
@@ -893,5 +892,4 @@ module.exports = {
   handleActivePost: handleActivePost,
   getStatisticalTypePost: getStatisticalTypePost,
   getListNoteByPost: getListNoteByPost,
-  handleReupPost: handleReupPost,
 };
