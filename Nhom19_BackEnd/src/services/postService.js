@@ -279,166 +279,6 @@ let handleReupPost = (data) => {
     }
   });
 };
-let handleAcceptPost = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!data.id || !data.statusCode) {
-        resolve({
-          errCode: 1,
-          errMessage: `Missing required parameters !`,
-        });
-      } else {
-        let foundPost = await db.Post.findOne({
-          where: { id: data.id },
-          raw: false,
-        });
-
-        console.log("foundPost : ", foundPost);
-
-        let postName = await db.DetailPost.findOne({
-          where: { id: foundPost.detailPostId },
-          attributes: {
-            exclude: ["statusCode"],
-          },
-        });
-
-        if (foundPost) {
-          foundPost.statusCode = data.statusCode;
-          if (data.statusCode == "PS1") {
-            foundPost.timePost = new Date().getTime();
-          }
-          await foundPost.save();
-          let note =
-            data.statusCode == "PS1" ? "Đã duyệt bài thành công" : data.note;
-          await db.Note.create({
-            postId: foundPost.id,
-            note: note,
-            userId: data.userId,
-          });
-          let user = await db.User.findOne({
-            where: { id: foundPost.userId },
-            attributes: {
-              exclude: ["userId"],
-            },
-          });
-          resolve({
-            errCode: 0,
-            errMessage:
-              data.statusCode == "PS1"
-                ? "Duyệt bài thành công"
-                : "Đã từ chối bài thành công",
-          });
-        } else {
-          resolve({
-            errCode: 2,
-            errMessage: "Không tồn tại bài viết",
-          });
-        }
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-let handleBanPost = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!data.postId || !data.note || !data.userId) {
-        resolve({
-          errCode: 1,
-          errMessage: `Missing required parameters !`,
-        });
-      } else {
-        let foundPost = await db.Post.findOne({
-          where: { id: data.postId },
-          raw: false,
-        });
-
-        let postName = await db.DetailPost.findOne({
-          where: { id: foundPost.detailPostId },
-          attributes: {
-            exclude: ["statusCode"],
-          },
-        });
-        if (foundPost) {
-          foundPost.statusCode = "PS4";
-          await foundPost.save();
-          await db.Note.create({
-            postId: foundPost.id,
-            note: data.note,
-            userId: data.userId,
-          });
-          let user = await db.User.findOne({
-            where: { id: foundPost.userId },
-            attributes: {
-              exclude: ["userId"],
-            },
-          });
-          resolve({
-            errCode: 0,
-            errMessage: "Đã chặn bài viết thành công",
-          });
-        } else {
-          resolve({
-            errCode: 2,
-            errMessage: "Không tồn tại bài viết",
-          });
-        }
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-let handleActivePost = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!data.id || !data.userId || !data.note) {
-        resolve({
-          errCode: 1,
-          errMessage: `Missing required parameters !`,
-        });
-      } else {
-        let foundPost = await db.Post.findOne({
-          where: { id: data.id },
-          raw: false,
-        });
-        let postName = await db.DetailPost.findOne({
-          where: { id: foundPost.detailPostId },
-          attributes: {
-            exclude: ["statusCode"],
-          },
-        });
-        if (foundPost) {
-          foundPost.statusCode = "PS3";
-          await foundPost.save();
-          await db.Note.create({
-            postId: foundPost.id,
-            note: data.note,
-            userId: data.userId,
-          });
-          let user = await db.User.findOne({
-            where: { id: foundPost.userId },
-            attributes: {
-              exclude: ["userId"],
-            },
-          });
-          resolve({
-            errCode: 0,
-            errMessage: "Đã mở lại trạng thái chờ duyệt",
-          });
-        } else {
-          resolve({
-            errCode: 2,
-            errMessage: "Không tồn tại bài viết",
-          });
-        }
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
 let getListPostByAdmin = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -877,6 +717,166 @@ let getListNoteByPost = (data) => {
       }
     } catch (error) {
       reject(error.message);
+    }
+  });
+};
+let handleAcceptPost = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.id || !data.statusCode) {
+        resolve({
+          errCode: 1,
+          errMessage: `Missing required parameters !`,
+        });
+      } else {
+        let foundPost = await db.Post.findOne({
+          where: { id: data.id },
+          raw: false,
+        });
+
+        console.log("foundPost : ", foundPost);
+
+        let postName = await db.DetailPost.findOne({
+          where: { id: foundPost.detailPostId },
+          attributes: {
+            exclude: ["statusCode"],
+          },
+        });
+
+        if (foundPost) {
+          foundPost.statusCode = data.statusCode;
+          if (data.statusCode == "PS1") {
+            foundPost.timePost = new Date().getTime();
+          }
+          await foundPost.save();
+          let note =
+            data.statusCode == "PS1" ? "Đã duyệt bài thành công" : data.note;
+          await db.Note.create({
+            postId: foundPost.id,
+            note: note,
+            userId: data.userId,
+          });
+          let user = await db.User.findOne({
+            where: { id: foundPost.userId },
+            attributes: {
+              exclude: ["userId"],
+            },
+          });
+          resolve({
+            errCode: 0,
+            errMessage:
+              data.statusCode == "PS1"
+                ? "Duyệt bài thành công"
+                : "Đã từ chối bài thành công",
+          });
+        } else {
+          resolve({
+            errCode: 2,
+            errMessage: "Không tồn tại bài viết",
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let handleBanPost = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.postId || !data.note || !data.userId) {
+        resolve({
+          errCode: 1,
+          errMessage: `Missing required parameters !`,
+        });
+      } else {
+        let foundPost = await db.Post.findOne({
+          where: { id: data.postId },
+          raw: false,
+        });
+
+        let postName = await db.DetailPost.findOne({
+          where: { id: foundPost.detailPostId },
+          attributes: {
+            exclude: ["statusCode"],
+          },
+        });
+        if (foundPost) {
+          foundPost.statusCode = "PS4";
+          await foundPost.save();
+          await db.Note.create({
+            postId: foundPost.id,
+            note: data.note,
+            userId: data.userId,
+          });
+          let user = await db.User.findOne({
+            where: { id: foundPost.userId },
+            attributes: {
+              exclude: ["userId"],
+            },
+          });
+          resolve({
+            errCode: 0,
+            errMessage: "Đã chặn bài viết thành công",
+          });
+        } else {
+          resolve({
+            errCode: 2,
+            errMessage: "Không tồn tại bài viết",
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+let handleActivePost = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.id || !data.userId || !data.note) {
+        resolve({
+          errCode: 1,
+          errMessage: `Missing required parameters !`,
+        });
+      } else {
+        let foundPost = await db.Post.findOne({
+          where: { id: data.id },
+          raw: false,
+        });
+        let postName = await db.DetailPost.findOne({
+          where: { id: foundPost.detailPostId },
+          attributes: {
+            exclude: ["statusCode"],
+          },
+        });
+        if (foundPost) {
+          foundPost.statusCode = "PS3";
+          await foundPost.save();
+          await db.Note.create({
+            postId: foundPost.id,
+            note: data.note,
+            userId: data.userId,
+          });
+          let user = await db.User.findOne({
+            where: { id: foundPost.userId },
+            attributes: {
+              exclude: ["userId"],
+            },
+          });
+          resolve({
+            errCode: 0,
+            errMessage: "Đã mở lại trạng thái chờ duyệt",
+          });
+        } else {
+          resolve({
+            errCode: 2,
+            errMessage: "Không tồn tại bài viết",
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
     }
   });
 };

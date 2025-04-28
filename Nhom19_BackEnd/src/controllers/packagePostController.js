@@ -73,7 +73,6 @@ let updatePackagePost = async (req, res) => {
     });
   }
 };
-
 let getStatisticalPackage = async (req, res) => {
   try {
     let data = await packageService.getStatisticalPackage(req.query);
