@@ -40,18 +40,6 @@ const ManagePackagePost = () => {
         }
     }, [search]);
 
-    let handleChangePage = async (number) => {
-        setnumberPage(number.selected);
-        let arrData = await getAllPackage({
-            limit: PAGINATION.pagerow,
-            offset: number.selected * PAGINATION.pagerow,
-            search: CommonUtils.removeSpace(search),
-        });
-        if (arrData && arrData.errCode === 0) {
-            setDataPackagePost(arrData.data);
-        }
-    };
-
     let hanndleSetActivePackage = async (event, id, isActive) => {
         event.preventDefault();
         let res = await setActiveTypePackage({
@@ -70,6 +58,18 @@ const ManagePackagePost = () => {
                 setCount(Math.ceil(arrData.count / PAGINATION.pagerow));
             }
         } else toast.error(res.errMessage);
+    };
+
+    let handleChangePage = async (number) => {
+        setnumberPage(number.selected);
+        let arrData = await getAllPackage({
+            limit: PAGINATION.pagerow,
+            offset: number.selected * PAGINATION.pagerow,
+            search: CommonUtils.removeSpace(search),
+        });
+        if (arrData && arrData.errCode === 0) {
+            setDataPackagePost(arrData.data);
+        }
     };
 
     const handleSearch = (value) => {
