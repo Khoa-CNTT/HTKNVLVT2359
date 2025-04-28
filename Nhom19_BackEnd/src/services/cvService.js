@@ -12,7 +12,6 @@ let getMapRequiredSkill = (mapRequired, post) => {
     }
   }
 };
-
 let handleCreateCv = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -162,46 +161,6 @@ let getAllListCvByPost = (data) => {
     }
   });
 };
-let getDetailCvById = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!data.cvId || !data.roleCode) {
-        resolve({
-          errCode: 1,
-          errMessage: "Missing required parameters !",
-        });
-      } else {
-        let cv = await db.Cv.findOne({
-          where: { id: data.cvId },
-          raw: false,
-          nest: true,
-          include: [
-            {
-              model: db.User,
-              as: "userCvData",
-              attributes: {
-                exclude: ["userId", "file", "companyId"],
-              },
-            },
-          ],
-        });
-        if (data.roleCode !== "CANDIDATE") {
-          cv.isChecked = 1;
-          await cv.save();
-        }
-        if (cv.file) {
-          cv.file = new Buffer.from(cv.file, "base64").toString("binary");
-        }
-        resolve({
-          errCode: 0,
-          data: cv,
-        });
-      }
-    } catch (error) {
-      reject(error.message);
-    }
-  });
-};
 let getAllCvByUserId = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -289,7 +248,46 @@ let getAllCvByUserId = (data) => {
     }
   });
 };
-
+let getDetailCvById = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.cvId || !data.roleCode) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameters !",
+        });
+      } else {
+        let cv = await db.Cv.findOne({
+          where: { id: data.cvId },
+          raw: false,
+          nest: true,
+          include: [
+            {
+              model: db.User,
+              as: "userCvData",
+              attributes: {
+                exclude: ["userId", "file", "companyId"],
+              },
+            },
+          ],
+        });
+        if (data.roleCode !== "CANDIDATE") {
+          cv.isChecked = 1;
+          await cv.save();
+        }
+        if (cv.file) {
+          cv.file = new Buffer.from(cv.file, "base64").toString("binary");
+        }
+        resolve({
+          errCode: 0,
+          data: cv,
+        });
+      }
+    } catch (error) {
+      reject(error.message);
+    }
+  });
+};
 let getStatisticalCv = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -398,7 +396,6 @@ let getStatisticalCv = (data) => {
     }
   });
 };
-
 let fillterCVBySelection = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -545,7 +542,6 @@ let fillterCVBySelection = (data) => {
     }
   });
 };
-
 let checkSeeCandiate = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -611,8 +607,8 @@ let checkSeeCandiate = (data) => {
 module.exports = {
   handleCreateCv: handleCreateCv,
   getAllListCvByPost: getAllListCvByPost,
-  getDetailCvById: getDetailCvById,
   getAllCvByUserId: getAllCvByUserId,
+  getDetailCvById: getDetailCvById,
   getStatisticalCv: getStatisticalCv,
   fillterCVBySelection: fillterCVBySelection,
   checkSeeCandiate: checkSeeCandiate,

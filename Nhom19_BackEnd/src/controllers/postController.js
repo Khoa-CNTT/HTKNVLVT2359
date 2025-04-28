@@ -12,46 +12,9 @@ let handleCreateNewPost = async (req, res) => {
     });
   }
 };
-let handleReupPost = async (req, res) => {
-  try {
-    let data = await postService.handleReupPost(req.body);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.log(error);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
 let handleUpdatePost = async (req, res) => {
   try {
     let data = await postService.handleUpdatePost(req.body);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.log(error);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
-let handleBanPost = async (req, res) => {
-  try {
-    let data = await postService.handleBanPost(req.body);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.log(error);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
-
-let handleAcceptPost = async (req, res) => {
-  try {
-    let data = await postService.handleAcceptPost(req.body);
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -98,18 +61,6 @@ let getDetailPostById = async (req, res) => {
     });
   }
 };
-let handleActivePost = async (req, res) => {
-  try {
-    let data = await postService.handleActivePost(req.body);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.log(error);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
 let getStatisticalTypePost = async (req, res) => {
   try {
     let data = await postService.getStatisticalTypePost(req.query);
@@ -122,7 +73,18 @@ let getStatisticalTypePost = async (req, res) => {
     });
   }
 };
-
+let handleReupPost = async (req, res) => {
+  try {
+    let data = await postService.handleReupPost(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
 let getListNoteByPost = async (req, res) => {
   try {
     let data = await postService.getListNoteByPost(req.query);
@@ -135,16 +97,52 @@ let getListNoteByPost = async (req, res) => {
     });
   }
 };
+let handleBanPost = async (req, res) => {
+  try {
+    let data = await postService.handleBanPost(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+let handleAcceptPost = async (req, res) => {
+  try {
+    let data = await postService.handleAcceptPost(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+let handleActivePost = async (req, res) => {
+  try {
+    let data = await postService.handleActivePost(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
 module.exports = {
   handleCreateNewPost: handleCreateNewPost,
   handleUpdatePost: handleUpdatePost,
-  handleBanPost: handleBanPost,
-  getListPostByAdmin: getListPostByAdmin,
   getAllPostByAdmin: getAllPostByAdmin,
+  getListPostByAdmin: getListPostByAdmin,
   getDetailPostById: getDetailPostById,
   handleActivePost: handleActivePost,
-  handleAcceptPost: handleAcceptPost,
   getStatisticalTypePost: getStatisticalTypePost,
   getListNoteByPost: getListNoteByPost,
   handleReupPost: handleReupPost,
+  handleAcceptPost: handleAcceptPost,
+  handleBanPost: handleBanPost,
 };

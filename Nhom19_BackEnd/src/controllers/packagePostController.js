@@ -25,7 +25,6 @@ let getPackageById = async (req, res) => {
     });
   }
 };
-
 let getPackageByType = async (req, res) => {
   try {
     let data = await packageService.getPackageByType(req.query);
@@ -50,7 +49,6 @@ let setActiveTypePackage = async (req, res) => {
     });
   }
 };
-
 let creatNewPackagePost = async (req, res) => {
   try {
     let data = await packageService.creatNewPackagePost(req.body);
@@ -63,7 +61,6 @@ let creatNewPackagePost = async (req, res) => {
     });
   }
 };
-
 let updatePackagePost = async (req, res) => {
   try {
     let data = await packageService.updatePackagePost(req.body);
@@ -76,7 +73,6 @@ let updatePackagePost = async (req, res) => {
     });
   }
 };
-
 let getStatisticalPackage = async (req, res) => {
   try {
     let data = await packageService.getStatisticalPackage(req.query);
@@ -89,33 +85,30 @@ let getStatisticalPackage = async (req, res) => {
     });
   }
 };
-
 let getPaymentLink = async (req, res) => {
   try {
-      let data = await packageService.getPaymentLink(req.query);
-      return res.status(200).json(data);
+    let data = await packageService.getPaymentLink(req.query);
+    return res.status(200).json(data);
   } catch (error) {
-      console.log(error)
-      return res.status(200).json({
-          errCode: -1,
-          errMessage: 'Error from server'
-      })
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
   }
-}
-
+};
 let paymentOrderSuccess = async (req, res) => {
   try {
-      let data = await packageService.paymentOrderSuccess(req.body);
-      return res.status(200).json(data);
+    let data = await packageService.paymentOrderSuccess(req.body);
+    return res.status(200).json(data);
   } catch (error) {
-      console.log(error)
-      return res.status(200).json({
-          errCode: -1,
-          errMessage: 'Error from server'
-      })
+    console.log(error);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
   }
-}
-
+};
 let getHistoryTrade = async (req, res) => {
   try {
     let data = await packageService.getHistoryTrade(req.query);
@@ -128,7 +121,6 @@ let getHistoryTrade = async (req, res) => {
     });
   }
 };
-
 let getSumByYear = async (req, res) => {
   try {
     let data = await packageService.getSumByYear(req.query);
@@ -141,17 +133,16 @@ let getSumByYear = async (req, res) => {
     });
   }
 };
-
 module.exports = {
-  getPackageByType : getPackageByType,
-    getPaymentLink: getPaymentLink,
-    paymentOrderSuccess: paymentOrderSuccess,
-    getAllPackage: getAllPackage,
-    setActiveTypePackage: setActiveTypePackage,
-    getPackageById: getPackageById,
-    creatNewPackagePost: creatNewPackagePost,
-    updatePackagePost: updatePackagePost,
-    getStatisticalPackage: getStatisticalPackage,
-    getHistoryTrade: getHistoryTrade,
-    getSumByYear: getSumByYear
+  getPackageByType: getPackageByType,
+  getPaymentLink: getPaymentLink,
+  paymentOrderSuccess: paymentOrderSuccess,
+  getAllPackage: getAllPackage,
+  setActiveTypePackage: setActiveTypePackage,
+  getPackageById: getPackageById,
+  creatNewPackagePost: creatNewPackagePost,
+  updatePackagePost: updatePackagePost,
+  getStatisticalPackage: getStatisticalPackage,
+  getHistoryTrade: getHistoryTrade,
+  getSumByYear: getSumByYear,
 };
