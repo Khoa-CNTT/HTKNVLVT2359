@@ -41,14 +41,13 @@ const ManageCv = () => {
                 console.log(error)
             }
         }
-
-
     }, [])
 
+    const history = useHistory()
+    
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
         let arrData = await getAllListCvByPostService({
-
 
             limit: PAGINATION.pagerow,
             offset: number.selected * PAGINATION.pagerow,
@@ -57,14 +56,11 @@ const ManageCv = () => {
         })
         if (arrData && arrData.errCode === 0) {
             setdataCv(arrData.data)
-
         }
     }
-    const history = useHistory()
     return (
 
         <div>
-
             <div className="col-12 grid-margin">
                 <div style={{padding : '30px' , borderRadius : '30px'}} className="card">
                     <div className="card-body">
@@ -154,11 +150,7 @@ const ManageCv = () => {
                         onPageChange={handleChangePage}
                     />
                 </div>
-
             </div>
-
-
-
         </div>
     )
 }
