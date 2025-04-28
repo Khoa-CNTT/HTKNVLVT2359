@@ -25,6 +25,99 @@ let getAllToSelect = async (req, res) => {
   }
 };
 let getPackageById = async (req, res) => {
+    try {
+        let data = await packageService.getPackageById(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+
+
+let updatePackageCv = async (req, res) => {
+    try {
+        let data = await packageService.updatePackageCv(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let getStatisticalPackageCv = async (req, res) => {
+    try {
+        let data = await packageService.getStatisticalPackage(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let getSumByYear = async (req, res) => {
+    try {
+        let data = await packageService.getSumByYear(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let setActiveTypePackage = async (req, res) => {
+    try {
+        let data = await packageService.setActiveTypePackage(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let creatNewPackageCv = async (req, res) => {
+    try {
+        let data = await packageService.creatNewPackageCv(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let getHistoryTrade = async (req, res) => {
+    try {
+        let data = await packageService.getHistoryTrade(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+
   try {
     let data = await packageService.getPackageById(req.query);
     return res.status(200).json(data);
