@@ -1,6 +1,8 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { getDetailCvService } from '../../../service/cvService';
+
+
 import { Link, useHistory } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 
@@ -40,10 +42,10 @@ const UserCv = () => {
         <div>
 
             <div className="col-12 grid-margin">
-                <div className="card">
+                <div style={{padding : '30px' , borderRadius : '30px'}} className="card">
                     <div className="card-body">
-                    <div onClick={() => history.goBack()} className='mb-2 hover-pointer' style={{ color: 'red' }}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div>
-                        <h4 className="card-title">Giới thiệu bản thân</h4>
+                    {/* <div onClick={() => history.goBack()} className='mb-2 hover-pointer' style={{ color: 'red' }}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div> */}
+                        <h4 className="card-title"><i>Giới thiệu bản thân</i></h4>
                         <blockquote class="blockquote blockquote-primary">
                             <p>{dataCV.description}</p>
                             <footer class="blockquote-footer"><cite title="Source Title">{dataCV.userCvData.firstName + " " + dataCV.userCvData.lastName}</cite></footer>
