@@ -2,7 +2,6 @@ import React from "react";
 import { useEffect, useState } from "react";
 import {
   getDetailUserById,
-  UpdateUserSettingService,
   getAllSkillByJobCode,
 } from "../../service/userService";
 import { useFetchAllcode } from "../../util/fetch";
@@ -10,6 +9,7 @@ import { toast } from "react-toastify";
 import "react-image-lightbox/style.css";
 import CommonUtils from "../../util/CommonUtils";
 import { Select } from "antd";
+
 const SettingUser = () => {
   const [listSkills, setListSkills] = useState([]);
   const [inputValues, setInputValues] = useState({
@@ -23,18 +23,13 @@ const SettingUser = () => {
     file: "",
   });
 
-  let handleOnChangeFile = async (event) => {
-    let data = event.target.files;
-    let file = data[0];
-    if (file) {
-      if (file.size > 2097152) {
-        toast.error("File của bạn quá lớn. Chỉ gửi file dưới 2MB");
-        return;
-      }
-      let base64 = await CommonUtils.getBase64(file);
-
-      setInputValues({ ...inputValues, file: base64 });
-    }
+  let getListSkill = async (jobType) => {
+    let res = await getAllSkillByJobCode(jobType);
+    let listSkills = res.data.map((item) => ({
+      value: item.id,
+      label: item.name,
+    }));
+    setListSkills(listSkills);
   };
 
   const handleChange = async (value, detail) => {
@@ -65,13 +60,18 @@ const SettingUser = () => {
     }
   };
 
-  let getListSkill = async (jobType) => {
-    let res = await getAllSkillByJobCode(jobType);
-    let listSkills = res.data.map((item) => ({
-      value: item.id,
-      label: item.name,
-    }));
-    setListSkills(listSkills);
+  let handleOnChangeFile = async (event) => {
+    let data = event.target.files;
+    let file = data[0];
+    if (file) {
+      if (file.size > 2097152) {
+        toast.error("File của bạn quá lớn. Chỉ gửi file dưới 2MB");
+        return;
+      }
+      let base64 = await CommonUtils.getBase64(file);
+
+      setInputValues({ ...inputValues, file: base64 });
+    }
   };
 
   let setStateUser = (data) => {
