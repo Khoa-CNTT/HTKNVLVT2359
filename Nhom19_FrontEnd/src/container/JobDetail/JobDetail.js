@@ -15,7 +15,6 @@ const JobDetail = () => {
         if (id) {
             fetchPost(id)
         }
-
     }, [])
 
     let fetchPost = async (id) => {
@@ -24,8 +23,6 @@ const JobDetail = () => {
             setDataPost(res.data)
         }
     }
-
-
 
     const handleOpenModal = () => {
         if (dataPost.timeEnd && CommonUtils.formatDate(dataPost.timeEnd) > 0) {
@@ -58,9 +55,9 @@ const JobDetail = () => {
         </div>
     </div>
     <!-- Preloader Start --> */}
+    
             {dataPost.companyData &&
-                <main>
-
+                <main> 
 
                     <div className="slider-area ">
                         <div className="single-slider slider-height2 d-flex align-items-center" style={{
@@ -102,7 +99,6 @@ const JobDetail = () => {
                                             </div>
                                         </div>
                                     </div>
-
 
                                     <div className="job-post-details">
                                         <div className="post-details1 mb-50">
