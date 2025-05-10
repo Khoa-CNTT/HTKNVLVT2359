@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useState } from "react";
 import { getFilterCv } from "../../../service/cvService";
 import {
@@ -8,8 +7,7 @@ import {
 import { useFetchAllcode } from "../../../util/fetch";
 import { PAGINATION } from "../../../util/constant";
 import ReactPaginate from "react-paginate";
-import { Link, useHistory } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Col, Row, Select, Modal } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
@@ -33,6 +31,20 @@ const FilterCv = () => {
         free: 0,
         notFree: 0,
     });
+
+    useEffect(() => {
+        try {
+            let userData = JSON.parse(localStorage.getItem("userData"));
+            fetchData();
+            if (isFirstTime) {
+                fetchCompany(userData.id, userData.companyId);
+                setIsFirstTime(false);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }, [inputValue]);
+
     let fetchCompany = async (userId, companyId = null) => {
         let res = await getDetailCompanyByUserId(userId, companyId);
         if (res && res.errCode === 0) {
@@ -42,7 +54,9 @@ const FilterCv = () => {
             });
         }
     };
+
     let history = useHistory();
+
     const confirmSeeCandiate = (id) => {
         confirm({
             title: "Khi xem bạn sẽ mất 1 lần xem thông tin ứng viên",
@@ -54,6 +68,7 @@ const FilterCv = () => {
             onCancel() {},
         });
     };
+
     let fetchData = async () => {
         let listSkills = [];
         let otherSkills = [];
@@ -64,6 +79,7 @@ const FilterCv = () => {
                 otherSkills.push(item);
             }
         });
+
         let arrData = await getFilterCv({
             limit: PAGINATION.pagerow,
             offset: 0,
@@ -80,18 +96,6 @@ const FilterCv = () => {
             setCount(Math.ceil(arrData.count / PAGINATION.pagerow));
         }
     };
-    useEffect(() => {
-        try {
-            let userData = JSON.parse(localStorage.getItem("userData"));
-            fetchData();
-            if (isFirstTime) {
-                fetchCompany(userData.id, userData.companyId);
-                setIsFirstTime(false);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }, [inputValue]);
 
     let { data: dataProvince } = useFetchAllcode("PROVINCE");
     let { data: dataExp } = useFetchAllcode("EXPTYPE");
@@ -169,6 +173,7 @@ const FilterCv = () => {
             setdataCv(arrData.data);
         }
     };
+
     return (
         <div>
             <div className="col-12 grid-margin">
@@ -329,12 +334,6 @@ const FilterCv = () => {
                                         <th>STT</th>
                                         <th>Tên ứng viên</th>
                                         <th>Lĩnh vực</th>
-                                        {/* {!isHiddenPercent && (
-                      <>
-                        <th>Tỉ lệ phù hợp</th>
-                        <th>Đánh giá</th>
-                      </>
-                    )} */}
                                         <th>Thao tác</th>
                                     </tr>
                                 </thead>
