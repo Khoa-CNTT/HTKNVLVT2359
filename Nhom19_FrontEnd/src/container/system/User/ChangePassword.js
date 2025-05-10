@@ -1,8 +1,7 @@
-import React from "react";
 import { useEffect, useState } from "react";
 import { handleChangePassword } from "../../../service/userService";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+
 const ChangePassword = (props) => {
     const [inputValues, setInputValues] = useState({
         password: "",
@@ -10,14 +9,17 @@ const ChangePassword = (props) => {
         confirmPassword: "",
     });
     const [user, setUser] = useState({});
+
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem("userData"));
         setUser(userData);
     }, []);
+
     const handleOnChange = (event) => {
         const { name, value } = event.target;
         setInputValues({ ...inputValues, [name]: value });
     };
+
     let handleSave = async () => {
         if (inputValues.password !== inputValues.confirmPassword) {
             toast.error("Mật khẩu nhập lại không đúng");
@@ -40,13 +42,14 @@ const ChangePassword = (props) => {
             toast.error(res.errMessage);
         }
     };
+
     return (
         <div>
             <div className="col-12 grid-margin">
                 <div style={{ padding: "30px" }} className="card">
                     <div className="card-body">
                         <h4 className="card-title">
-                            <i>Đổi mật khẩu</i>
+                            <i clasName="card-title-italic">Đổi mật khẩu</i>
                         </h4>
                         <form className="form-sample">
                             <div className="row">
