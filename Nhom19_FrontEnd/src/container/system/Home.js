@@ -759,7 +759,6 @@ const Home = () => {
                 </b>{" "}
                 {totalCom}
               </div>
-
                 <div className="table-responsive pt-2">
                   <table className="table table-bordered">
                     <thead>
@@ -848,5 +847,4 @@ const Home = () => {
     </>
   );
 };
-
 export default Home;
