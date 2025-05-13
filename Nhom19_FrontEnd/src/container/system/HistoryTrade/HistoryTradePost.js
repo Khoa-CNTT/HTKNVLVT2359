@@ -46,6 +46,14 @@ const HistoryTradePost = () => {
         setToDatePost(toDate)
     }
     
+    let handleChangePage = async (number) => {
+        setnumberPage(number.selected)
+        getData({
+            ...sendParams,
+            offset: number.selected * PAGINATION.pagerow
+        })
+    }
+    
     let getData = async (params) => {
 
         let arrData = await getHistoryTradePost(params)
@@ -55,13 +63,6 @@ const HistoryTradePost = () => {
         }
     }
 
-    let handleChangePage = async (number) => {
-        setnumberPage(number.selected)
-        getData({
-            ...sendParams,
-            offset: number.selected * PAGINATION.pagerow
-        })
-    }
     let handleOnClickExport =async ()=>{
         let res = await getHistoryTradePost({
             ...sendParams,
