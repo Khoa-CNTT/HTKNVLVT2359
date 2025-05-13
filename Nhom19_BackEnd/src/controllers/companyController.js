@@ -12,7 +12,6 @@ let handleCreateNewCompany = async (req, res) => {
     });
   }
 };
-
 let handleUnBanCompany = async (req, res) => {
   try {
     let data = await companyService.handleUnBanCompany(req.body.id);
@@ -25,7 +24,6 @@ let handleUnBanCompany = async (req, res) => {
     });
   }
 };
-
 let handleUpdateCompany = async (req, res) => {
   try {
     let data = await companyService.handleUpdateCompany(req.body);
@@ -38,7 +36,6 @@ let handleUpdateCompany = async (req, res) => {
     });
   }
 };
-
 let handleBanCompany = async (req, res) => {
   try {
     let data = await companyService.handleBanCompany(req.body.id);
@@ -51,9 +48,6 @@ let handleBanCompany = async (req, res) => {
     });
   }
 };
-
-
-
 let handleAddUserCompany = async (req, res) => {
   try {
     let data = await companyService.handleAddUserCompany(req.body);
@@ -90,9 +84,6 @@ let handleQuitCompany = async (req, res) => {
     });
   }
 };
-
-
-
 let handleAccecptCompany = async (req, res) => {
   try {
     let data = await companyService.handleAccecptCompany(req.body);
@@ -117,7 +108,6 @@ let getListCompany = async (req, res) => {
     });
   }
 };
-
 let getDetailCompanyById = async (req, res) => {
   try {
     let data = await companyService.getDetailCompanyById(req.query.id);
@@ -130,9 +120,6 @@ let getDetailCompanyById = async (req, res) => {
     });
   }
 };
-
-
-
 let getAllUserByCompanyId = async (req, res) => {
   try {
     let data = await companyService.getAllUserByCompanyId(req.query);
@@ -158,18 +145,17 @@ let getDetailCompanyByUserId = async (req, res) => {
     });
   }
 };
-
 module.exports = {
-  handleCreateNewCompany: handleCreateNewCompany,
-  handleBanCompany: handleBanCompany,
-  handleUnBanCompany: handleUnBanCompany,
-  handleUpdateCompany: handleUpdateCompany,
-  handleAddUserCompany: handleAddUserCompany,
-  getListCompany: getListCompany,
   getDetailCompanyById: getDetailCompanyById,
   getDetailCompanyByUserId: getDetailCompanyByUserId,
   getAllUserByCompanyId: getAllUserByCompanyId,
   handleQuitCompany: handleQuitCompany,
   getAllCompanyByAdmin: getAllCompanyByAdmin,
   handleAccecptCompany: handleAccecptCompany,
+  handleCreateNewCompany: handleCreateNewCompany,
+  handleBanCompany: handleBanCompany,
+  handleUnBanCompany: handleUnBanCompany,
+  handleUpdateCompany: handleUpdateCompany,
+  handleAddUserCompany: handleAddUserCompany,
+  getListCompany: getListCompany,
 };
