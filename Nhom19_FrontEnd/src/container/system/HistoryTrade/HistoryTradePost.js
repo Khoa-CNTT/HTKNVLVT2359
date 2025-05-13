@@ -29,15 +29,6 @@ const HistoryTradePost = () => {
         companyId: user.companyId
     }
 
-    let getData = async (params) => {
-
-        let arrData = await getHistoryTradePost(params)
-        if (arrData && arrData.errCode === 0) {
-            setData(arrData.data)
-            setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
-        }
-    }
-
     let onDatePicker = async (values) => {
         let fromDate =''
         let toDate = ''
@@ -53,6 +44,15 @@ const HistoryTradePost = () => {
         })
         setFromDatePost(fromDate)
         setToDatePost(toDate)
+    }
+    
+    let getData = async (params) => {
+
+        let arrData = await getHistoryTradePost(params)
+        if (arrData && arrData.errCode === 0) {
+            setData(arrData.data)
+            setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
+        }
     }
 
     let handleChangePage = async (number) => {
