@@ -1,10 +1,10 @@
 import React from 'react'
+
 import {
     BrowserRouter as Router,
     Switch,
     Route,
 } from "react-router-dom";
-    
 import UserCv from '../system/Cv/UserCv';
 import ChangePassword from '../system/User/ChangePassword';
 import CandidateInfo from './CandidateInfo';
@@ -28,7 +28,7 @@ const HomeCandidate = () => {
 
                         {/* partial */}
                         <div className="main-panel">
-                            <div style={{backgroundColor : '#e2ebf8' , marginLeft: '10%' }} className="content-wrapper" >
+                            <div style={{backgroundColor : '#e2ebf8' , marginLeft: '12%' }} className="content-wrapper" >
 
                                 <Route exact path="/candidate/info" component={CandidateInfo}>
 

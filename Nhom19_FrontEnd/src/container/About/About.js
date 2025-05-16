@@ -13,7 +13,7 @@ const About = () => {
             </div>
         </div>
     </div> */}
-    
+
       <main>
         {/* <!-- Hero Area Start--> */}
         <div class="slider-area ">

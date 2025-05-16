@@ -1,11 +1,11 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { handleLoginService } from "../../service/userService";
 import { toast } from "react-toastify";
+
+import { handleLoginService } from "../../service/userService";
+
 const Login = () => {
-  let history = useHistory();
   const [inputValues, setInputValues] = useState({
     password: "",
     phonenumber: "",

@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
+  checkUserEmail,
   checkUserPhoneService,
   createNewUser,
   handleLoginService,
@@ -12,14 +13,6 @@ import handleValidate from "../../util/Validation";
 import { Link } from "react-router-dom";
 
 const Register = () => {
-  const [inputValidates, setValidates] = useState({
-    phonenumber: true,
-    password: true,
-    firstName: true,
-    lastName: true,
-    email: true,
-    againPass: true,
-  });
   const [inputValues, setInputValues] = useState({
     phonenumber: "",
     firstName: "",
@@ -85,53 +78,53 @@ const Register = () => {
     let checkFirstName = handleValidate(inputValues.firstName, "isEmpty");
     let checkLastName = handleValidate(inputValues.lastName, "isEmpty");
     let checkEmail = handleValidate(inputValues.email, "email");
-    if (
-      !(
-        checkPhonenumber === true &&
-        checkPassword === true &&
-        checkFirstName === true &&
-        checkLastName === true &&
-        checkEmail === true
-      )
-    ) {
-      setValidates({
-        phonenumber: checkPhonenumber,
-        password: checkPassword,
-        firstName: checkFirstName,
-        lastName: checkLastName,
-        email: checkEmail,
-      });
-      return;
-    }
 
-    if (inputValues.againPass !== inputValues.password) {
-      toast.error("Mật khẩu nhập lại không trùng khớp!");
-      return;
-    }
     let res = await checkUserPhoneService(inputValues.phonenumber);
-    if (res === true) {
+    let emailCheck = await checkUserEmail(inputValues.email);
+
+    console.log("Email check : " , emailCheck)
+
+    if (!(checkFirstName === true)) {
+      toast.error(checkFirstName);
+      return;
+    } else if (!(checkLastName === true)) {
+      toast.error(checkLastName);
+      return;
+    } else if (!(checkPhonenumber === true)) {
+      toast.error(checkPhonenumber);
+      return;
+    } else if ( !(checkEmail === true) ) {
+      toast.error(checkEmail);
+      return;
+    } else if ( !(checkPassword === true) ) {
+      toast.error(checkPassword);
+      return;
+    } else if (inputValues.againPass !== inputValues.password) {
+      toast.error("Mật khẩu nhập lại không trùng khớp !");
+      return;
+    } else if (res) {
       toast.error("Số điện thoại đã tồn tại !");
-    } 
-    let createUser = async () => {
-      let res = await createNewUser({
-        password: inputValues.password,
-        firstName: inputValues.firstName,
-        lastName: inputValues.lastName,
-        phonenumber: inputValues.phonenumber,
-        roleCode: inputValues.roleCode,
-        email: inputValues.email,
-        image:
-          "https://res.cloudinary.com/bingo2706/image/upload/v1642521841/dev_setups/l60Hf_blyqhb.png",
+      return;
+    } else if (emailCheck === true) {
+      toast.error("Email đã tồn tại !");
+      return;
+    } else {
+      setInputValues({
+        ...inputValues,
+        ["dataUser"]: {
+          phonenumber: inputValues.phonenumber,
+          firstName: inputValues.firstName,
+          lastName: inputValues.lastName,
+          password: inputValues.password,
+          roleCode: inputValues.roleCode,
+          email: inputValues.email,
+          genderCode : inputValues.genderCode
+        },
+        ["isOpen"]: true,
       });
-      if (res && res.errCode === 0) {
-        toast.success("Tạo tài khoản thành công");
-        handleLogin(inputValues.phonenumber, inputValues.password);
-      } else {
-        toast.error(res.errMessage);
-      }
-    };
-    createUser();
+    }
   };
+
   return (
     <>
       {inputValues.isOpen === false && (
@@ -173,11 +166,6 @@ const Register = () => {
                             id="exampleInputUsername1"
                             placeholder="Họ"
                           />
-                          {inputValidates.firstName && (
-                            <p style={{ color: "red" }}>
-                              {inputValidates.firstName}
-                            </p>
-                          )}
                         </div>
                         <div className="form-group">
                           <input
@@ -193,11 +181,6 @@ const Register = () => {
                             id="exampleInputUsername1"
                             placeholder="Tên"
                           />
-                          {inputValidates.lastName && (
-                            <p style={{ color: "red" }}>
-                              {inputValidates.lastName}
-                            </p>
-                          )}
                         </div>
                         <div className="form-group">
                           <input
@@ -213,11 +196,6 @@ const Register = () => {
                             id="exampleInputEmail1"
                             placeholder="Số điện thoại"
                           />
-                          {inputValidates.phonenumber && (
-                            <p style={{ color: "red" }}>
-                              {inputValidates.phonenumber}
-                            </p>
-                          )}
                         </div>
                         <div className="form-group">
                           <input
@@ -232,11 +210,6 @@ const Register = () => {
                             className="form-control form-control-lg"
                             placeholder="Email"
                           />
-                          {inputValidates.email && (
-                            <p style={{ color: "red" }}>
-                              {inputValidates.email}
-                            </p>
-                          )}
                         </div>
                         <div className="form-group">
                           <input
@@ -252,11 +225,6 @@ const Register = () => {
                             id="exampleInputPassword1"
                             placeholder="Mật khẩu"
                           />
-                          {inputValidates.password && (
-                            <p style={{ color: "red" }}>
-                              {inputValidates.password}
-                            </p>
-                          )}
                         </div>
                         <div className="form-group">
                           <input
@@ -271,11 +239,6 @@ const Register = () => {
                             className="form-control form-control-lg"
                             placeholder="Nhập lại mật khẩu"
                           />
-                          {inputValidates.againPass && (
-                            <p style={{ color: "red" }}>
-                              {inputValidates.againPass}
-                            </p>
-                          )}
                         </div>
                         <div className="form-group">
                           <select
@@ -363,7 +326,11 @@ const Register = () => {
         </div>
       )}
 
-      {/* {inputValues.isOpen === true && <Otp dataUser={inputValues.dataUser} />} */}
+      {inputValues.isOpen === true && (
+        <div className="container-scroller" style={{ padding: "20px" }}>
+          <Otp dataUser={inputValues.dataUser} />
+        </div>
+      )}
     </>
   );
 };

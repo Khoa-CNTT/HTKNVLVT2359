@@ -8,8 +8,15 @@ import {
   Button,
   Spinner,
 } from "reactstrap";
+import { Select } from "antd";
+
 import { createNewCv } from "../../service/cvService";
-import { getDetailUserById } from "../../service/userService";
+import {
+  getDetailUserById,
+  getAllSkillByJobCode,
+  getDetailAllcodeByCode
+} from "../../service/userService";
+import { useFetchAllcode } from "../../util/fetch";
 import CommonUtils from "../../util/CommonUtils";
 import "./modal.css";
 function SendCvModal(props) {
@@ -25,6 +32,13 @@ function SendCvModal(props) {
     fileUser: "",
   });
   const [typeCv, setTypeCv] = useState("pcCv");
+  const [listSkills, setListSkills] = useState([]);
+  const [inputValues, setInputValues] = useState({
+    jobType: "",
+    salary: "",
+    skills: [],
+  });
+
   let getFileCv = async (id) => {
     let res = await getDetailUserById(id);
     setInputValue({
@@ -44,9 +58,55 @@ function SendCvModal(props) {
         : "",
     });
   };
+
+  const handleChangeValue = async (value, detail) => {
+    if (Array.isArray(detail)) {
+      setInputValues({
+        ...inputValues,
+        skills: detail
+      });
+      console.log("List : " , inputValues.skills)
+    } else {
+      if (detail.type === "jobType") {
+        let res = await getAllSkillByJobCode(value);
+        let listSkills = res.data.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }));
+        setListSkills(listSkills);
+        setInputValues({
+          ...inputValues,
+          [detail.type]: value,
+          skills: [],
+        });
+      } else {
+        setInputValues({
+          ...inputValues,
+          [detail.type]: value,
+        });
+      }
+    }
+  };
+
+  let { data: dataSalary } = useFetchAllcode("SALARYTYPE");
+  let { data: dataJobType } = useFetchAllcode("JOBTYPE");
+
+  dataSalary = dataSalary.map((item) => ({
+    value: item.code,
+    label: item.value,
+    type: "salary",
+  }));
+
+  dataJobType = dataJobType.map((item) => ({
+    value: item.code,
+    label: item.value,
+    type: "jobType",
+  }));
+
   useEffect(() => {
     if (userData) getFileCv(userData.id);
   }, []);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setInputValue({
@@ -94,8 +154,9 @@ function SendCvModal(props) {
       });
     }
   };
+
   const handleSendCV = async () => {
-    setIsLoading(true);
+    const code = await getDetailAllcodeByCode(inputValues.jobType)
     let cvSend = "";
     if (typeCv === "userCv") {
       cvSend = inputValue.fileUser;
@@ -106,7 +167,7 @@ function SendCvModal(props) {
       userId: inputValue.userId,
       file: cvSend,
       postId: inputValue.postId,
-      description: inputValue.description,
+      description: `Giới Thiệu Bản Thân : ${inputValue.description} ; Lĩnh Vực : ${code.data.value} ; Mức Lương : ${inputValues.salary} ; Kỹ Năng : ${JSON.stringify(inputValues.skills.map(item => item.label))}`,
     });
     setTimeout(function () {
       setIsLoading(false);
@@ -131,11 +192,35 @@ function SendCvModal(props) {
         centered
         style={{ maxWidth: "1000px", width: "90%" }}
       >
-        <div style={{ display: "flex" , gap : '30px', alignItems:'center' , padding : '50px' }}>
-          <div style={{width : '380px' ,flex : '1' }} >
-            <p style={{fontSize : '20px' , fontWeight : 'bold' , marginBottom : '0px'}} className="text-center">NỘP CV CỦA BẠN CHO NHÀ TUYỂN DỤNG</p>
+        <div
+          style={{
+            display: "flex",
+            gap: "30px",
+            alignItems: "center",
+            padding: "50px",
+          }}
+        >
+          <div style={{ width: "380px", flex: "1" }}>
+            <p
+              style={{
+                fontSize: "20px",
+                fontWeight: "bold",
+                marginBottom: "0px",
+              }}
+              className="text-center"
+            >
+              NỘP CV CỦA BẠN CHO NHÀ TUYỂN DỤNG
+            </p>
             <ModalBody>
-              <p style={{fontSize : '15px' , fontWeight : 'bold' , marginBottom : '0px'}} >Nhập lời giới thiệu gửi đến nhà tuyển dụng</p>  
+              <p
+                style={{
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                  marginBottom: "0px",
+                }}
+              >
+                Nhập lời giới thiệu gửi đến nhà tuyển dụng
+              </p>
               <div>
                 <textarea
                   placeholder="Giới thiệu sơ lược về bản thân để tăng sự yêu thích đối với nhà tuyển dụng"
@@ -203,12 +288,22 @@ function SendCvModal(props) {
               </div>
             </ModalBody>
             <ModalFooter style={{ justifyContent: "space-around" }}>
-              <Button style={{borderRadius : '35px' , backgroundColor : 'rgb(250 166 26)'}} className="me-5" onClick={() => handleSendCV()}>
+              <Button
+                style={{
+                  borderRadius: "35px",
+                  backgroundColor: "rgb(250 166 26)",
+                }}
+                className="me-5"
+                onClick={() => handleSendCV()}
+              >
                 Gửi hồ sơ
               </Button>
 
               <Button
-                style={{borderRadius : '35px' , backgroundColor : 'rgb(250 166 26)'}}
+                style={{
+                  borderRadius: "35px",
+                  backgroundColor: "rgb(250 166 26)",
+                }}
                 onClick={() => {
                   setInputValue({
                     ...inputValue,
@@ -238,7 +333,87 @@ function SendCvModal(props) {
               </Modal>
             )}
           </div>
-          <img width={'360px'} height={'180px'} src="/assets/img/logo/logo.png" />
+          <form style={{ width: "330px" }} className="form-sample">
+            <div style={{ height: "65px" }} className="row">
+              <div className="col-md-6">
+                <div style={{display : 'block'}} className="form-group row">
+                  <label style={{marginLeft : '15px'}} >Lĩnh vực</label>
+                  <div style={{marginLeft : '14px'}}>
+                    <Select
+                      style={{
+                        width: "calc(200% - 26px)",
+                      }}
+                      placeholder="Chọn lĩnh vực"
+                      onChange={handleChangeValue}
+                      options={dataJobType}
+                      value={inputValues.jobType}
+                      filterOption={(input, option) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      showSearch
+                    ></Select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style={{ marginTop : '10px'  , height: "65px" }} className="row">
+              <div className="col-md-6">
+                <div style={{display : 'block'}} className="form-group row">
+                  <label style={{marginLeft : '15px'}} >Mức lương</label>
+                  <div style={{marginLeft : '14px'}}>
+                    <Select
+                      style={{
+                        width: "calc(200% - 26px)",
+                      }}
+                      placeholder="Chọn mức lương"
+                      onChange={handleChangeValue}
+                      options={dataSalary}
+                      value={inputValues.salary}
+                      filterOption={(input, option) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      showSearch
+                    ></Select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-12">
+                <div className="form-group row">
+                  <label className="col-sm-3 col-form-label">Kĩ năng</label>
+                  <div
+                    className="col-sm-9 mt-3"
+                    style={{ marginLeft: "-136px" }}
+                  >
+                    <Select
+                      disabled={!inputValues.jobType}
+                      mode="multiple"
+                      style={{
+                        marginTop: "30px",
+                        marginLeft: "46px",
+                        width: "calc(100% + 67px)",
+                      }}
+                      placeholder="Chọn kĩ năng của bạn"
+                      onChange={handleChangeValue}
+                      options={listSkills}
+                      value={inputValues.skills}
+                      filterOption={(input, option) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      showSearch
+                    ></Select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </Modal>
     </div>

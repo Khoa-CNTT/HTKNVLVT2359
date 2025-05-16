@@ -1,20 +1,19 @@
-import React, { useState } from "react";
-import { useFetchAllcode } from "../../../util/fetch";
-const LeftBar = (props) => {
-    const { data: dataJobType } = useFetchAllcode("JOBTYPE");
-    const { data: dataJobLevel } = useFetchAllcode("JOBLEVEL");
-    const { data: dataSalaryType } = useFetchAllcode("SALARYTYPE");
-    const { data: dataExpType } = useFetchAllcode("EXPTYPE");
-    const { data: dataWorkType } = useFetchAllcode("WORKTYPE");
-    const { data: dataJobLocation } = useFetchAllcode("PROVINCE");
+import React, { useState } from 'react'
+import { useFetchAllcode } from '../../../util/fetch'
 
-    const [check, setCheck] = useState();
+const LeftBar = (props) => {
+    const { data: dataJobType } = useFetchAllcode('JOBTYPE')
+    const { data: dataJobLevel } = useFetchAllcode('JOBLEVEL')
+    const { data: dataSalaryType } = useFetchAllcode('SALARYTYPE')
+    const { data: dataExpType } = useFetchAllcode('EXPTYPE')
+    const { data: dataWorkType } = useFetchAllcode('WORKTYPE')
+    const { data: dataJobLocation } = useFetchAllcode('PROVINCE')
+
+    const [check, setCheck] = useState()
+    
     return (
         <>
-            <div
-                style={{ backgroundColor: "white", borderRadius: "40px" }}
-                className="job-category-listing mb-50"
-            >
+            <div style={{backgroundColor : 'white' , borderRadius : '40px'}} className="job-category-listing mb-50">
                 {/* <!-- single one --> */}
                 <div className="single-listing">
                     <div className="small-section-tittle2">
@@ -22,19 +21,14 @@ const LeftBar = (props) => {
                     </div>
                     {/* <!-- Select job items start --> */}
                     <div className="select-job-items2">
-                        <select
-                            name="select"
-                            onChange={(e) => {
-                                props.recieveJobType(e.target.value);
-                            }}
-                        >
+                        <select name="select" onChange={(e) => {
+                            props.recieveJobType(e.target.value)
+                        }}>
                             <option value="">Tất cả</option>
                             {dataJobType.map((data, index) => {
                                 return (
-                                    <option value={data.code} key={index}>
-                                        {data.value}
-                                    </option>
-                                );
+                                    <option value={data.code} key={index}>{data.value}</option>
+                                )
                             })}
                         </select>
                     </div>
@@ -46,19 +40,14 @@ const LeftBar = (props) => {
                         </div>
                         {dataWorkType.map((data, index) => {
                             return (
-                                <label className="container" key={index}>
-                                    {data.value}
-                                    <input
-                                        type="checkbox"
-                                        value={data.code}
-                                        onChange={(e) => {
-                                            props.worktype(e.target.value);
-                                        }}
-                                        required
-                                    />
+                                <label className="container" key={index}>{data.value}
+                                    <input type="checkbox" value={data.code} onChange={(e) => {
+
+                                        props.worktype(e.target.value)
+                                    }} required />
                                     <span className="checkmark"></span>
                                 </label>
-                            );
+                            )
                         })}
                     </div>
                     {/* <!-- select-Categories End --> */}
@@ -70,19 +59,14 @@ const LeftBar = (props) => {
                     </div>
                     {/* <!-- Select job items start --> */}
                     <div className="select-job-items2">
-                        <select
-                            name="select"
-                            onChange={(e) => {
-                                props.recieveLocation(e.target.value);
-                            }}
-                        >
+                        <select name="select" onChange={(e) => {
+                            props.recieveLocation(e.target.value);
+                        }}>
                             <option value="">Tất cả</option>
                             {dataJobLocation.map((data, index) => {
                                 return (
-                                    <option value={data.code} key={index}>
-                                        {data.value}
-                                    </option>
-                                );
+                                    <option value={data.code} key={index}>{data.value}</option>
+                                )
                             })}
                         </select>
                     </div>
@@ -94,18 +78,11 @@ const LeftBar = (props) => {
                         </div>
                         {dataExpType.map((data, index) => {
                             return (
-                                <label className="container" key={index}>
-                                    {data.value}
-                                    <input
-                                        type="checkbox"
-                                        value={data.code}
-                                        onChange={(e) =>
-                                            props.recieveExp(e.target.value)
-                                        }
-                                    />
+                                <label className="container" key={index}>{data.value}
+                                    <input type="checkbox" value={data.code} onChange={(e) => props.recieveExp(e.target.value)} />
                                     <span className="checkmark"></span>
                                 </label>
-                            );
+                            )
                         })}
                     </div>
                     {/* <!-- select-Categories End --> */}
@@ -119,20 +96,13 @@ const LeftBar = (props) => {
                         </div>
                         {dataJobLevel.map((data, index) => {
                             return (
-                                <label className="container" key={index}>
-                                    {data.value}
-                                    <input
-                                        type="checkbox"
-                                        value={data.code}
-                                        onChange={(e) => {
-                                            props.recieveJobLevel(
-                                                e.target.value
-                                            );
-                                        }}
-                                    />
+                                <label className="container" key={index}>{data.value}
+                                    <input type="checkbox" value={data.code} onChange={(e) => {
+                                        props.recieveJobLevel(e.target.value)
+                                    }} />
                                     <span className="checkmark"></span>
                                 </label>
-                            );
+                            )
                         })}
                     </div>
                     {/* <!-- select-Categories End --> */}
@@ -144,27 +114,23 @@ const LeftBar = (props) => {
                             </div>
                             {dataSalaryType.map((data, index) => {
                                 return (
-                                    <label className="container" key={index}>
-                                        {data.value}
-                                        <input
-                                            type="checkbox"
-                                            value={data.code}
-                                            onChange={(e) => {
-                                                props.recieveSalary(
-                                                    e.target.value
-                                                );
-                                            }}
+                                    <label className="container" key={index}>{data.value}
+                                        <input type="checkbox" value={data.code} onChange={(e) => {
+                                            props.recieveSalary(e.target.value)
+
+                                        }}
                                         />
                                         <span className="checkmark"></span>
                                     </label>
-                                );
+                                )
                             })}
                         </div>
                     </div>
                 </div>
             </div>
         </>
-    );
-};
+    )
+}
 
-export default LeftBar;
+export default LeftBar
+

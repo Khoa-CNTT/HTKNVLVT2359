@@ -2,9 +2,10 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import moment from 'moment';
+
 import SendCvModal from '../../components/modal/SendCvModal'
 import { getDetailPostByIdService } from '../../service/userService'
-import moment from 'moment';
 import CommonUtils from '../../util/CommonUtils';
 const JobDetail = () => {
     const history = useHistory()
@@ -15,6 +16,7 @@ const JobDetail = () => {
         if (id) {
             fetchPost(id)
         }
+
     }, [])
 
     let fetchPost = async (id) => {
@@ -23,6 +25,8 @@ const JobDetail = () => {
             setDataPost(res.data)
         }
     }
+
+
 
     const handleOpenModal = () => {
         if (dataPost.timeEnd && CommonUtils.formatDate(dataPost.timeEnd) > 0) {
@@ -55,13 +59,14 @@ const JobDetail = () => {
         </div>
     </div>
     <!-- Preloader Start --> */}
-    
             {dataPost.companyData &&
-                <main> 
+                <main>
+
 
                     <div className="slider-area ">
                         <div className="single-slider slider-height2 d-flex align-items-center" style={{
-                            backgroundImage: `url(${dataPost.companyData.coverimage})`
+                            marginTop : '12px' , 
+                            backgroundImage: `url("/assets/img/logo/logo.png")`
                         }}>
                             <div className="container">
                                 <div className="row">
@@ -99,6 +104,7 @@ const JobDetail = () => {
                                             </div>
                                         </div>
                                     </div>
+
 
                                     <div className="job-post-details">
                                         <div className="post-details1 mb-50">

@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Job from "../../../components/Job/Job";
 import { Input } from "antd";
+
+import Job from "../../../components/Job/Job";
 const RightContent = (props) => {
   return (
     <>

@@ -23,6 +23,8 @@ const AddWorkType = ({ style = { padding: "30px", borderRadius: "30px" } }) => {
     code: "",
   });
 
+  const [toggle, setToggle] = useState(false);
+
   useEffect(() => {
     if (id) {
       let fetchDetailWorkType = async () => {
@@ -40,16 +42,16 @@ const AddWorkType = ({ style = { padding: "30px", borderRadius: "30px" } }) => {
     }
   }, []);
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setInputValues({
-        ...inputValues,
-        value: CommonUtils.removeSpace(inputValues.value),
-      });
-    }, 50);
+  // useEffect(() => {
+  //   const delayDebounceFn = setTimeout(() => {
+  //     setInputValues({
+  //       ...inputValues,
+  //       value: CommonUtils.removeSpace(inputValues.value),
+  //     });
+  //   }, 50);
 
-    return () => clearTimeout(delayDebounceFn);
-  }, [inputValues.value]);
+  //   return () => clearTimeout(delayDebounceFn);
+  // }, [inputValues.value]);
 
   const handleOnChange = (event) => {
     const { name, value } = event.target;
@@ -68,7 +70,7 @@ const AddWorkType = ({ style = { padding: "30px", borderRadius: "30px" } }) => {
     setIsLoading(true);
     if (isActionADD === true) {
       let res = await createAllCodeService({
-        value: inputValues.value,
+        value: CommonUtils.removeSpace(inputValues.value),
         code: inputValues.code,
         type: "WORKTYPE",
       });
@@ -87,7 +89,7 @@ const AddWorkType = ({ style = { padding: "30px", borderRadius: "30px" } }) => {
       }, 50);
     } else {
       let res = await UpdateAllcodeService({
-        value: inputValues.value,
+        value: CommonUtils.removeSpace(inputValues.value),
         code: id,
       });
       setTimeout(() => {
@@ -100,13 +102,40 @@ const AddWorkType = ({ style = { padding: "30px", borderRadius: "30px" } }) => {
       }, 50);
     }
   };
+
+  const handleToggle = () => {
+    setToggle(true);
+  };
+
+  const handleToggleClose = () => {
+    setToggle(false);
+  };
+
   const history = useHistory();
   return (
     <div className="">
       <div className="col-12 grid-margin">
         <div style={style} className="card">
           <div className="card-body">
-            {/* <div onClick={()=> history.goBack()} className='mb-2 hover-pointer' style={{color:'red'}}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div> */}
+            {isActionADD === false && (
+
+            <div
+              onClick={() => history.goBack()}
+              className="mb-2 hover-pointer"
+              style={{
+                backgroundColor: "rgb(250 166 26)",
+                border: "1px solid rgb(250 166 26)",
+                marginBottom: "20px",
+                marginLeft: "940px",
+                fontSize: "18px",
+                textAlign : 'center',
+                padding : '8px',
+                borderRadius : '15px'
+              }}
+            >
+              X
+            </div>
+            )}
             <h4 className="card-title">
               <i>
                 {isActionADD === true
@@ -115,60 +144,149 @@ const AddWorkType = ({ style = { padding: "30px", borderRadius: "30px" } }) => {
               </i>
             </h4>
             <br></br>
-            <form className="form-sample">
-              <div className="row">
-                <div className="col-md-8">
-                  <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">
-                      Tên hình thức làm việc
-                    </label>
-                    <div className="col-sm-9">
-                      <input
-                        style={{ borderRadius: "30px" }}
-                        type="text"
-                        value={inputValues.value}
-                        name="value"
-                        onChange={(event) => handleOnChange(event)}
-                        className="form-control"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-8">
-                  <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">Mã code</label>
-                    <div className="col-sm-9">
-                      <input
-                        style={{ borderRadius: "30px" }}
-                        type="text"
-                        disabled={true}
-                        value={inputValues.code}
-                        name="code"
-                        onChange={(event) => handleOnChange(event)}
-                        className="form-control"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+            {toggle == false && isActionADD === true && (
               <button
                 style={{
                   backgroundColor: "rgb(250 166 26)",
                   border: "1px solid rgb(250 166 26)",
+                  marginBottom: "20px",
                 }}
                 type="button"
                 className="btn1 btn1-primary1 btn1-icon-text"
-                onClick={() => handleSaveWorkType()}
+                onClick={() => handleToggle()}
               >
                 <i class="ti-file btn1-icon-prepend"></i>
-                {isActionADD === true
-                  ? "Thêm hình thức làm việc"
-                  : "Cập nhật "}
+                Thêm Mới
               </button>
-            </form>
+            )}
+            {toggle && isActionADD === true && (
+              <button
+                style={{
+                  backgroundColor: "rgb(250 166 26)",
+                  border: "1px solid rgb(250 166 26)",
+                  marginBottom: "20px",
+                  marginLeft: "900px",
+                  fontSize: "18px",
+                }}
+                type="button"
+                className="btn1 btn1-primary1 btn1-icon-text"
+                onClick={() => handleToggleClose()}
+              >
+                X
+              </button>
+            )}
+            {toggle && isActionADD == true && (
+              <form className="form-sample">
+                <div className="row">
+                  <div className="col-md-8">
+                    <div className="form-group row">
+                      <label className="col-sm-3 col-form-label">
+                        Tên hình thức làm việc
+                      </label>
+                      <div className="col-sm-9">
+                        <input
+                          style={{ borderRadius: "30px" }}
+                          type="text"
+                          value={inputValues.value}
+                          name="value"
+                          onChange={(event) => handleOnChange(event)}
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-8">
+                    <div className="form-group row">
+                      <label className="col-sm-3 col-form-label">Mã code</label>
+                      <div className="col-sm-9">
+                        <input
+                          style={{ borderRadius: "30px" }}
+                          type="text"
+                          disabled={true}
+                          value={inputValues.code}
+                          name="code"
+                          onChange={(event) => handleOnChange(event)}
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  style={{
+                    backgroundColor: "rgb(250 166 26)",
+                    border: "1px solid rgb(250 166 26)",
+                  }}
+                  type="button"
+                  className="btn1 btn1-primary1 btn1-icon-text"
+                  onClick={() => handleSaveWorkType()}
+                >
+                  <i class="ti-file btn1-icon-prepend"></i>
+                  {isActionADD === true
+                    ? "Thêm hình thức làm việc"
+                    : "Cập nhật "}
+                </button>
+              </form>
+            )}
+            {isActionADD == false && (
+              <form className="form-sample">
+                <div className="row">
+                  <div className="col-md-8">
+                    <div className="form-group row">
+                      <label className="col-sm-3 col-form-label">
+                        Tên hình thức làm việc
+                      </label>
+                      <div className="col-sm-9">
+                        <input
+                          style={{ borderRadius: "30px" }}
+                          type="text"
+                          value={inputValues.value}
+                          name="value"
+                          onChange={(event) => handleOnChange(event)}
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-8">
+                    <div className="form-group row">
+                      <label className="col-sm-3 col-form-label">Mã code</label>
+                      <div className="col-sm-9">
+                        <input
+                          style={{ borderRadius: "30px" }}
+                          type="text"
+                          disabled={true}
+                          value={inputValues.code}
+                          name="code"
+                          onChange={(event) => handleOnChange(event)}
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  style={{
+                    backgroundColor: "rgb(250 166 26)",
+                    border: "1px solid rgb(250 166 26)",
+                  }}
+                  type="button"
+                  className="btn1 btn1-primary1 btn1-icon-text"
+                  onClick={() => handleSaveWorkType()}
+                >
+                  <i class="ti-file btn1-icon-prepend"></i>
+                  {isActionADD === true
+                    ? "Thêm hình thức làm việc"
+                    : "Cập nhật "}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>
