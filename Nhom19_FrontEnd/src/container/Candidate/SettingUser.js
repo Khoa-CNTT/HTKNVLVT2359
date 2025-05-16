@@ -1,14 +1,16 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { Select } from "antd";
+import "react-image-lightbox/style.css";
+
 import {
   getDetailUserById,
+  UpdateUserSettingService,
   getAllSkillByJobCode,
 } from "../../service/userService";
 import { useFetchAllcode } from "../../util/fetch";
-import { toast } from "react-toastify";
-import "react-image-lightbox/style.css";
 import CommonUtils from "../../util/CommonUtils";
-import { Select } from "antd";
 
 const SettingUser = () => {
   const [listSkills, setListSkills] = useState([]);
@@ -22,14 +24,19 @@ const SettingUser = () => {
     isTakeMail: 0,
     file: "",
   });
+  
+  let handleOnChangeFile = async (event) => {
+    let data = event.target.files;
+    let file = data[0];
+    if (file) {
+      if (file.size > 2097152) {
+        toast.error("File của bạn quá lớn. Chỉ gửi file dưới 2MB");
+        return;
+      }
+      let base64 = await CommonUtils.getBase64(file);
 
-  let getListSkill = async (jobType) => {
-    let res = await getAllSkillByJobCode(jobType);
-    let listSkills = res.data.map((item) => ({
-      value: item.id,
-      label: item.name,
-    }));
-    setListSkills(listSkills);
+      setInputValues({ ...inputValues, file: base64 });
+    }
   };
 
   const handleChange = async (value, detail) => {
@@ -60,18 +67,13 @@ const SettingUser = () => {
     }
   };
 
-  let handleOnChangeFile = async (event) => {
-    let data = event.target.files;
-    let file = data[0];
-    if (file) {
-      if (file.size > 2097152) {
-        toast.error("File của bạn quá lớn. Chỉ gửi file dưới 2MB");
-        return;
-      }
-      let base64 = await CommonUtils.getBase64(file);
-
-      setInputValues({ ...inputValues, file: base64 });
-    }
+  let getListSkill = async (jobType) => {
+    let res = await getAllSkillByJobCode(jobType);
+    let listSkills = res.data.map((item) => ({
+      value: item.id,
+      label: item.name,
+    }));
+    setListSkills(listSkills);
   };
 
   let setStateUser = (data) => {
@@ -92,7 +94,6 @@ const SettingUser = () => {
       file: data.userAccountData.userSettingData.file ?? "",
     });
   };
-
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     if (userData) {
@@ -155,6 +156,32 @@ const SettingUser = () => {
     }
   };
 
+  let handleSaveUser = async () => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    let settingData = {
+      categoryJobCode: inputValues.jobType,
+      addressCode: inputValues.jobProvince,
+      experienceJobCode: inputValues.exp,
+      isTakeMail: inputValues.isTakeMail,
+      isFindJob: inputValues.isFindJob,
+      file: inputValues.file,
+      salaryJobCode: inputValues.salary,
+      listSkills: inputValues.skills,
+    };
+    let res = await UpdateUserSettingService({
+      id: userData.id,
+      data: settingData,
+    });
+    if (res && res.errCode === 0) {
+      toast.success("Cập nhật người dùng thành công");
+      window.location.reload();
+    } else {
+      toast.error(res.errMessage);
+    }
+  };
+  // let handleSearchMulti = (input, option) => {
+  //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+  // };
   return (
     <div className="">
       <div className="col-12 grid-margin">
@@ -308,7 +335,7 @@ const SettingUser = () => {
                   </div>
                 </div>
               </div>
-              <div className="row">
+              {/* <div className="row">
                 <div className="col-md-6">
                   <div className="form-group row">
                     <label className="col-sm-3 col-form-label">
@@ -324,7 +351,7 @@ const SettingUser = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-group row">

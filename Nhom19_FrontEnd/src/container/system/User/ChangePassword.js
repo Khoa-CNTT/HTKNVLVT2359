@@ -22,6 +22,11 @@ const ChangePassword = (props) => {
             toast.error("Mật khẩu nhập lại không đúng")
             return
         }
+
+        if (inputValues.password == inputValues.oldPassword) {
+            toast.error("Mật khẩu mới trùng với mật khẩu cũ")
+            return
+        }
         let res = await handleChangePassword({
             id: user.id,
             oldpassword: inputValues.oldPassword,

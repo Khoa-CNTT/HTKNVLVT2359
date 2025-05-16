@@ -1,17 +1,19 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { createNewUser, getDetailUserById, UpdateUserService } from '../../../service/userService';
-import { useFetchAllcode } from '../../../util/fetch';
-import DatePicker from '../../../components/input/DatePicker';
 import { toast } from 'react-toastify';
 import { useParams } from "react-router-dom";
 import localization from 'moment/locale/vi';
 import moment from 'moment';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+
+import DatePicker from '../../../components/input/DatePicker';
+import { createNewUser, getDetailUserById, UpdateUserService } from '../../../service/userService';
+import { useFetchAllcode } from '../../../util/fetch';
 import CommonUtils from '../../../util/CommonUtils';
 
 const UserInfo = () => {
+    const date = new Date();
     const [birthday, setbirthday] = useState('');
     const [isChangeDate, setisChangeDate] = useState(false)
     const [isChangeImg, setisChangeImg] = useState(false)
@@ -71,6 +73,7 @@ const UserInfo = () => {
         setisChangeDate(true)
 
     }
+
     let handleOnChangeImage = async (event) => {
         let data = event.target.files;
         let file = data[0];
@@ -82,11 +85,13 @@ const UserInfo = () => {
 
         }
     }
+
     let openPreviewImage = () => {
         if (!inputValues.imageReview) return;
 
         setInputValues({ ...inputValues, ["isOpen"]: true })
     }
+
     let handleSaveUser = async () => {
 
         let res = await UpdateUserService({

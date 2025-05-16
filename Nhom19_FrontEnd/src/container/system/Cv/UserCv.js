@@ -19,11 +19,17 @@ const UserCv = () => {
             data: ''
         }
     });
+    const [desc , setDesc] = useState([])
+    const [skill , setSkill] = useState({})
     useEffect(() => {
         if (id) {
+
             let fetchCV = async () => {
                 let res = await getDetailCvService(id,user.roleCode)
+                console.log('res',res)
                 if (res && res.errCode === 0) {
+                    res.data.description = res.data.description.split(";")
+                    setDesc(res.data.description)
                     setdataCV(res.data)
                 }
             }
@@ -47,7 +53,9 @@ const UserCv = () => {
                     {/* <div onClick={() => history.goBack()} className='mb-2 hover-pointer' style={{ color: 'red' }}><i class="fa-solid fa-arrow-left mr-2"></i>Quay lại</div> */}
                         <h4 className="card-title"><i>Giới thiệu bản thân</i></h4>
                         <blockquote class="blockquote blockquote-primary">
-                            <p>{dataCV.description}</p>
+                            {desc.map((item) => {
+                                return <p><b>{item}</b></p>
+                            })}
                             <footer class="blockquote-footer"><cite title="Source Title">{dataCV.userCvData.firstName + " " + dataCV.userCvData.lastName}</cite></footer>
                         </blockquote>
 

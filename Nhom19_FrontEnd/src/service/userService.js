@@ -35,6 +35,11 @@ const UnbanUserService = (userId) => {
 const checkUserPhoneService = (phonenumber) => {
     return axios.get(`/api/check-phonenumber-user?phonenumber=${phonenumber}`)
 }
+
+const checkUserEmail = (email) => {
+    return axios.get(`/api/check-email-user?email=${email}`)
+}
+
 const changePasswordByphone = (data) => {
     return axios.post(`/api/changepasswordbyPhone`,data)
 }
@@ -55,6 +60,20 @@ const UpdateUserSettingService = (data) => {
     return axios.put(`/api/setDataUserSetting`, data)
 
 }
+
+const otpEmail = (email) => {
+    return axios.get(`/api/otpEmail?email=${email}`)
+}
+
+const checkMST = (mst) => {
+    return axios.get(`/api/check-mst-company?checkMST=${mst}`)
+}
+
+const checkCompanyPhone = (phonenumber) => {
+    return axios.get(`/api/check-phone-company?checkCompanyPhone=${phonenumber}`)
+}
+
+
 
 //===============ALL CODE========================//
 const getAllCodeService = (type) => {
@@ -333,5 +352,5 @@ export {
     getListSkill, getAllSkillByJobCode, createSkilleService, UpdateSkillService, DeleteSkillService, getDetailSkillById,
     UpdateUserSettingService,
     getPackageByIdCv, getAllPackageCv, getPaymentLinkCv, paymentOrderSuccessServiceCv, setActiveTypePackageCv, createPackageCv, updatePackageCv,getStatisticalPackageCv, getAllToSelect,
-    getHistoryTradeCv, getHistoryTradePost, getSumByYearCv, getSumByYearPost
+    getHistoryTradeCv, getHistoryTradePost, getSumByYearCv, getSumByYearPost,otpEmail,checkUserEmail,checkMST,checkCompanyPhone
 }

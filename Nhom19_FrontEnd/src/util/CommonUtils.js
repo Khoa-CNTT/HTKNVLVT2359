@@ -23,7 +23,7 @@ class CommonUtils {
     }
     static removeSpace(str) {
         str = str.trim()
-        return str = str.replace(/\s+/g, ' ').trim()
+        return str.replace(/\s+/g, ' ').trim() // Chỉ thay thế khoảng trắng liên tiếp
     }
     static replaceCode(str) {
         str = this.removeSpace(str)

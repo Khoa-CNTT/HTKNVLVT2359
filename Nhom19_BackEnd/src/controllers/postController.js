@@ -1,42 +1,5 @@
 import postService from '../services/postService';
-let getFilterPost = async (req, res) => {
-  try {
-      let data = await postService.getFilterPost(req.query);
-      return res.status(200).json(data);
-  } catch (error) {
-      console.log(error)
-      return res.status(200).json({
-          errCode: -1,
-          errMessage: 'Error from server'
-      })
-  }
-}
 
-let getStatisticalTypePost = async (req, res) => {
-  try {
-      let data = await postService.getStatisticalTypePost(req.query);
-      return res.status(200).json(data)
-  } catch (error) {
-      console.log(error)
-      return res.status(200).json({
-          errCode: -1,
-          errMessage: 'Error from server'
-      })
-  }
-}
-
-let getListNoteByPost = async (req, res) => {
-  try {
-      let data = await postService.getListNoteByPost(req.query);
-      return res.status(200).json(data)
-  } catch (error) {
-      console.log(error)
-      return res.status(200).json({
-          errCode: -1,
-          errMessage: 'Error from server'
-      })
-  }
-}
 let handleCreateNewPost = async (req, res) => {
     try {
         let data = await postService.handleCreateNewPost(req.body);
@@ -149,7 +112,44 @@ let handleActivePost = async (req, res) => {
         })
     }
 }
+let getFilterPost = async (req, res) => {
+    try {
+        let data = await postService.getFilterPost(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
 
+let getStatisticalTypePost = async (req, res) => {
+    try {
+        let data = await postService.getStatisticalTypePost(req.query);
+        return res.status(200).json(data)
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let getListNoteByPost = async (req, res) => {
+    try {
+        let data = await postService.getListNoteByPost(req.query);
+        return res.status(200).json(data)
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
 module.exports = {
     handleCreateNewPost: handleCreateNewPost,
     handleUpdatePost: handleUpdatePost,

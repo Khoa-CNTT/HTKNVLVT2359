@@ -1,11 +1,10 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { createNewUser, getDetailUserById, UpdateUserService } from '../../service/userService';
+import { getDetailUserById, UpdateUserService } from '../../service/userService';
 import { useFetchAllcode } from '../../util/fetch';
 import DatePicker from '../../components/input/DatePicker';
 import { toast } from 'react-toastify';
 import { useParams } from "react-router-dom";
-import localization from 'moment/locale/vi';
 import moment from 'moment';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
@@ -210,7 +209,7 @@ const CandidateInfo = () => {
                                     <div className="form-group row">
                                         <label className="col-sm-3 col-form-label">Email</label>
                                         <div className="col-sm-9">
-                                            <input style={{borderRadius : '20px'}} type="email" value={inputValues.email} name="email" onChange={(event) => handleOnChange(event)} className="form-control" />
+                                            <input disabled={isActionADD === true ? false : true} style={{borderRadius : '20px'}} type="email" value={inputValues.email} name="email" onChange={(event) => handleOnChange(event)} className="form-control" />
                                         </div>
                                     </div>
                                 </div>

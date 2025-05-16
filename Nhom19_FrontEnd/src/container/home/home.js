@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom'
 import Categories from '../../components/home/Categories'
 import FeatureJobs from '../../components/home/FeaturesJobs'
 import { getListPostService } from '../../service/userService'
+import ChatBot from '../../components/ChatBot/ChatBot'
 const Home = () => {
     const [dataFeature, setDataFeature] = useState([])
     const [dataHot,setDateHot] = useState([])
+    const [showChatBot , setShowChatBot] = useState(false)
     let loadPost = async (limit, offset) => {
         let arrData = await getListPostService({
             limit: limit,
@@ -57,7 +59,12 @@ const Home = () => {
     </div> */}
             {/* <!-- Preloader Start --> */}
 
-            <main>
+            <main >
+                <ChatBot showChatBot={showChatBot} />
+                <button onClick={() => setShowChatBot(prev => !prev)} id='chatbot-toggler' className={`${!showChatBot ? "pulse_anima" : "rotate"}`} >
+                    <span class="material-symbols-rounded">mode_comment</span>
+                    <span class="material-symbols-rounded">close</span>
+                </button>
                 {/* <!-- slider Area Start--> */}
                 <div class="slider-area ">
                     {/* <!-- Mobile Menu --> */}
@@ -88,7 +95,6 @@ const Home = () => {
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="section-tittle text-center">
-                                    <span>Lĩnh vực công việc nổi bật</span>
                                     <h2><i>Danh mục nghề nghiệp</i>  </h2>
                                 </div>
                             </div>
@@ -230,6 +236,7 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
+
             </main>
         </>
     )

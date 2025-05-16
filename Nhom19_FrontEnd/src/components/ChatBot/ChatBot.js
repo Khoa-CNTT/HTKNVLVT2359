@@ -135,6 +135,25 @@ const ChatBot = ({ showChatBot }) => {
           console.log("Arr BĐS : ", arrData);
           data = arrData.data;
           apiResponseText = `JindJobs xin được phép phản hồi lại bạn các công việc sau :`;
+        }else if (
+          aiText.toUpperCase().includes("GIÁO VIÊN") ||
+          aiText.toUpperCase().includes("DẠY HỌC") 
+        ) {
+          let params = {
+            limit: 3,
+            offset: 0,
+            categoryJobCode: "giao-vien",
+            addressCode: "",
+            salaryJobCode: [],
+            categoryJoblevelCode: [],
+            categoryWorktypeCode: [],
+            experienceJobCode: [],
+            search: "",
+          };
+          let arrData = await getListPostService(params);
+          console.log("Arr BĐS : ", arrData);
+          data = arrData.data;
+          apiResponseText = `JindJobs xin được phép phản hồi lại bạn các công việc sau :`;
         } else {
           let params = {
             limit: 3,

@@ -10,7 +10,7 @@ const Footer = () => {
                                 <div className="col-xl-10 col-lg-10 ">
                                     <div className="footer-copy-right">
                                         <p>
-                                            Bản quyền &copy;<script>document.write(new Date().getFullYear());</script> Nhóm 9 Khó Luận Tốt Nghiệp DTU
+                                            <b><i>FINDJOBS FIND YOUR DREAM JOB</i></b>
                                         </p>
                                     </div>
                                 </div>

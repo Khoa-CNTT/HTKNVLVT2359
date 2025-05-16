@@ -152,6 +152,7 @@ const Home = () => {
       }
     } else if (type === "Company") {
       setnumberPageCom(number.selected);
+      console.log("Number : " , number.selected)
       let arrData = await getAllUsers({
         limit: PAGINATION.pagerow,
         offset: number.selected * 2,
@@ -385,9 +386,10 @@ const Home = () => {
           >
             <div className="card-body">
               <h4 className="card-title">
-                <i>Bảng thông kê số lượng CV</i>
+                <i>Bảng thống kê số lượng bài đăng của công ty</i>
               </h4>
               <RangePicker
+                style={{ borderRadius: "30px" }}
                 onChange={(values) => onDatePicker(values)}
               ></RangePicker>
               <div className="table-responsive pt-2">
