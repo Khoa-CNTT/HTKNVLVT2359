@@ -611,6 +611,128 @@ let getAllUser = (data) => {
     }
   });
 };
+
+let getAllCandidate = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.limit || !data.offset) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter !",
+        });
+      } else {
+        let objectFilter = {
+          limit: +data.limit,
+          offset: +data.offset,
+          attributes: {
+            exclude: ["password"],
+          },
+          include: [
+            {
+              model: db.Allcode,
+              as: "roleData",
+              attributes: ["code", "value"],
+            },
+            {
+              model: db.Allcode,
+              as: "statusAccountData",
+              attributes: ["code", "value"],
+            },
+            {
+              model: db.User,
+              as: "userAccountData",
+              attributes: {
+                exclude: ["userId"],
+              },
+              include: [
+                {
+                  model: db.Allcode,
+                  as: "genderData",
+                  attributes: ["value", "code"],
+                },
+              ],
+            },
+          ],
+          raw: true,
+          nest: true,
+        };
+        if (data.role) {
+          objectFilter.where = {roleCode: data.role}
+        }
+        let res = await db.Account.findAndCountAll(objectFilter);
+        resolve({
+          errCode: 0,
+          data: res.rows,
+          count: res.count,
+        });
+      }
+    } catch (error) {
+      reject(error.message);
+    }
+  });
+};
+
+let getAllCompany = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.limit || !data.offset) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter !",
+        });
+      } else {
+        let objectFilter = {
+          limit: +data.limit,
+          offset: +data.offset,
+          attributes: {
+            exclude: ["password"],
+          },
+          include: [
+            {
+              model: db.Allcode,
+              as: "roleData",
+              attributes: ["code", "value"],
+            },
+            {
+              model: db.Allcode,
+              as: "statusAccountData",
+              attributes: ["code", "value"],
+            },
+            {
+              model: db.User,
+              as: "userAccountData",
+              attributes: {
+                exclude: ["userId"],
+              },
+              include: [
+                {
+                  model: db.Allcode,
+                  as: "genderData",
+                  attributes: ["value", "code"],
+                },
+              ],
+            },
+          ],
+          raw: true,
+          nest: true,
+        };
+        console.log("Data : " , data.role)
+        if (data.role) {
+          objectFilter.where = {roleCode: data.role}
+        }
+        let res = await db.Account.findAndCountAll(objectFilter);
+        resolve({
+          errCode: 0,
+          data: res.rows,
+          count: res.count,
+        });
+      }
+    } catch (error) {
+      reject(error.message);
+    }
+  });
+};
+
 let getDetailUserById = (userid) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -761,4 +883,6 @@ module.exports = {
   checkUserEmail: checkUserEmail,
   checkCompanyPhone: checkCompanyPhone,
   checkMST: checkMST,
+  getAllCandidate : getAllCandidate ,
+  getAllCompany : getAllCompany
 };

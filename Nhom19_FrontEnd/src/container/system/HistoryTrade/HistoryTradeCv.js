@@ -143,7 +143,7 @@ const HistoryTradeCv = () => {
                                                         <td>{item.packageOrderCvData.name}</td>
                                                         <td>{item.id}</td>
                                                         <td>{item.amount}</td>
-                                                        <td style={{ textAlign: 'right' }}>{(item.packageOrderCvData.price * 1000000).toLocaleString('vi-VN')} USD</td>
+                                                        <td style={{ textAlign: 'right' }}>{(item.packageOrderCvData.price * 1000000).toLocaleString('vi-VN')} VNĐ</td>
                                                         <td>{item.userOrderCvData.firstName + ' ' + item.userOrderCvData.lastName }</td>
                                                         <td>{moment(item.createdAt).format('DD-MM-YYYY HH:mm:ss')}</td>
                                                     </tr>

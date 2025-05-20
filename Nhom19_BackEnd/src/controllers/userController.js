@@ -117,6 +117,33 @@ let getDetailUserById = async (req, res) => {
     }
 }
 
+let getAllCandidate = async (req,res) => {
+    try {
+        let data = await userService.getAllCandidate(req.query);
+        console.log("Data : " , data)
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
+let getAllCompany = async (req , res) => {
+    try {
+        let data = await userService.getAllCompany(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+
 let checkUserPhone = async (req, res) => {
     try {
         let data = await userService.checkUserPhone(req.query.phonenumber);
@@ -212,5 +239,7 @@ module.exports = {
     optEmail : optEmail , 
     checkUserEmail : checkUserEmail , 
     checkCompanyPhone : checkCompanyPhone , 
-    checkMST : checkMST
+    checkMST : checkMST , 
+    getAllCandidate : getAllCandidate ,
+    getAllCompany : getAllCompany
 }

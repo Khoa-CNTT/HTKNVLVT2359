@@ -4,7 +4,14 @@ import axios from "../axios";
 //==================USER==========================//
 const getAllUsers = (data) => {
     return axios.get(`/api/get-all-user?limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
+}
 
+const getAllCandidate = (data) => {
+    return axios.get(`/api/get-all-candidate?limit=${data.limit}&offset=${data.offset}&role=${data.role}`)
+}
+
+const getAllUserCompany = (data) => {
+    return axios.get(`/api/get-all-company?limit=${data.limit}&offset=${data.offset}&role=${data.role}`)
 }
 
 const createNewUser = (data) => {
@@ -352,5 +359,5 @@ export {
     getListSkill, getAllSkillByJobCode, createSkilleService, UpdateSkillService, DeleteSkillService, getDetailSkillById,
     UpdateUserSettingService,
     getPackageByIdCv, getAllPackageCv, getPaymentLinkCv, paymentOrderSuccessServiceCv, setActiveTypePackageCv, createPackageCv, updatePackageCv,getStatisticalPackageCv, getAllToSelect,
-    getHistoryTradeCv, getHistoryTradePost, getSumByYearCv, getSumByYearPost,otpEmail,checkUserEmail,checkMST,checkCompanyPhone
+    getHistoryTradeCv, getHistoryTradePost, getSumByYearCv, getSumByYearPost,otpEmail,checkUserEmail,checkMST,checkCompanyPhone,getAllCandidate,getAllUserCompany
 }
