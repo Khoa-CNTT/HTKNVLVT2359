@@ -53,7 +53,7 @@ const Menu = () => {
                   style={{ fontSize: "16px", marginTop: "5px" }}
                   className="menu-title"
                 >
-                  Thống Kê
+                  Thống kê số lượng bài đăng
                 </span>
               </Link>
             </a>
