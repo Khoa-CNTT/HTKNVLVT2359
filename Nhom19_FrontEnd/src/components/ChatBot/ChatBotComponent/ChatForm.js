@@ -30,7 +30,10 @@ const ChatForm = ({
       textAi.toUpperCase().includes("CÔNG TY") ||
       textAi.toUpperCase().includes("LĨNH VỰC") ||
       textAi.toUpperCase().includes("NGÀNH") ||
-      textAi.toUpperCase().includes("THÔNG TIN")
+      textAi.toUpperCase().includes("THÔNG TIN") ||
+      textAi.toUpperCase().includes("CÁC") ||
+      textAi.toUpperCase().includes("TÌM KIẾM") ||
+      textAi.toUpperCase().includes("ỨNG VIÊN")
     ) {
       setTimeout(() => {
         setChatHistory((history) => [

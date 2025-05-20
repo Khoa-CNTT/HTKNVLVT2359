@@ -13,9 +13,6 @@ const HistoryTradePost = () => {
     const [dataSum,setDataSum] = useState(0)
     const [fromDatePost,setFromDatePost] = useState('')
     const [toDatePost,setToDatePost] = useState('')
-
-
-
     const [data, setData] = useState([])
     const [count, setCount] = useState('')
 

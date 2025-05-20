@@ -6,7 +6,6 @@ import postController from '../controllers/postController';
 import cvController from '../controllers/cvController';
 import packageController from '../controllers/packagePostController';
 import packageCvController from '../controllers/packageCvController';
-
 import middlewareControllers from '../middlewares/jwtVerify'
 let router = express.Router();
 
@@ -28,6 +27,8 @@ let initWebRoutes = (app) => {
     router.get('/api/check-email-user',userController.checkUserEmail)
     router.get('/api/check-phone-company',userController.checkCompanyPhone)
     router.get('/api/check-mst-company',userController.checkMST)
+    router.get('/api/get-all-candidate',middlewareControllers.verifyTokenUser,userController.getAllCandidate)
+    router.get('/api/get-all-company',middlewareControllers.verifyTokenUser,userController.getAllCompany)
 
     //===================API ALLCODE========================//
     router.post('/api/create-new-all-code',middlewareControllers.verifyTokenAdmin ,allcodeController.handleCreateNewAllCode)

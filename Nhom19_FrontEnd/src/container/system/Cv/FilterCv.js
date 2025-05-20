@@ -50,7 +50,6 @@ const FilterCv = () => {
       onOk() {
         history.push(`/admin/candiate/${id}/`);
       },
-
       onCancel() {},
     });
   };

@@ -10,6 +10,8 @@ import {
   getStatisticalPackagePost,
   getStatisticalPackageCv,
   getAllUsers,
+  getAllCandidate,
+  getAllUserCompany,
 } from "../../service/userService";
 import { getStatisticalCv } from "../../service/cvService";
 import { PAGINATION } from "../../util/constant";
@@ -61,22 +63,25 @@ const Home = () => {
   };
 
   let fetchAllUser = async () => {
-    let res = await getAllUsers({
-      limit: PAGINATION.pagerow,
+    let resCandidate = await getAllCandidate({
+      limit: 4,
       offset: 0,
-      search: "",
+      role: "CANDIDATE",
     });
 
-    let userCandidate = res.data.filter((item) => item.roleCode != "COMPANY" && item.roleCode != "ADMIN");
-    let userCompany = res.data.filter((item) => item.roleCode != "CANDIDATE" && item.roleCode != "ADMIN");
+    let resCompany = await getAllUserCompany({
+      limit: 4,
+      offset: 0,
+      role: "COMPANY",
+    });
 
-    if (res && res.errCode === 0) {
-      setDataUserCan(userCandidate);
-      setDataUserCom(userCompany);
-      setCountCompany(Math.ceil(res.count / PAGINATION.pagerow));
-      setCountCandidate(Math.ceil(res.count / PAGINATION.pagerow));
-      setTotalCom(userCompany.length);
-      setTotalCan(userCandidate.length);
+    if (resCandidate && resCandidate.errCode === 0 && resCompany && resCompany.errCode === 0) {
+      setDataUserCan(resCandidate.data);
+      setDataUserCom(resCompany.data);
+      setCountCompany(Math.ceil(resCompany.count / 4));
+      setCountCandidate(Math.ceil(resCandidate.count / 4));
+      setTotalCom(resCompany.count);
+      setTotalCan(resCandidate.count);
     }
 
   };
@@ -153,27 +158,26 @@ const Home = () => {
     } else if (type === "Company") {
       setnumberPageCom(number.selected);
       console.log("Number : " , number.selected)
-      let arrData = await getAllUsers({
-        limit: PAGINATION.pagerow,
-        offset: number.selected * 2,
-        search: "",
+      let arrData = await getAllUserCompany({
+        limit: 4,
+        offset: number.selected * 4,
+        role: "COMPANY",
       });
-      let userCompany = arrData.data.filter((item) => item.roleCode != "CANDIDATE" && item.roleCode != "ADMIN");
       if (arrData && arrData.errCode === 0) {
-        setDataUserCom(userCompany);
-        setCountCompany(Math.ceil(arrData.count / PAGINATION.pagerow));
+        setDataUserCom(arrData.data);
+        setCountCompany(Math.ceil(arrData.count / 4));
       }
     } else if (type === "Candidate") {
+
       setnumberPageCan(number.selected);
-      let arrData = await getAllUsers({
-        limit: PAGINATION.pagerow,
-        offset: number.selected * 2,
-        search: "",
+      let arrData = await getAllCandidate({
+        limit: 4,
+        offset: number.selected * 4,
+        role: "CANDIDATE",
       });
-      let userCandidate = arrData.data.filter((item) => item.roleCode != "COMPANY" && item.roleCode != "ADMIN");
       if (arrData && arrData.errCode === 0) {
-        setDataUserCan(userCandidate);
-        setCountCandidate(Math.ceil(arrData.count / PAGINATION.pagerow));
+        setDataUserCan(arrData.data);
+        setCountCandidate(Math.ceil(arrData.count / 4));
       }
     } else {
       setnumberPageCv(number.selected);
